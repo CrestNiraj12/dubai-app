@@ -1,0 +1,39 @@
+.container {
+    margin: 2% 10% !important;
+    padding: 0 !important;
+    max-width: 80%;
+}
+
+.row {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+}
+
+.sliderImage {
+    height: 500px;
+    object-fit: cover;
+    width: 100%;
+}
+
+.slideButton {
+    font-size: 0;
+    line-height: 0;
+    position: absolute;
+    top: 50%;
+    display: block;
+    width: 30px;
+    height: 30px;
+    padding: 0;
+    transform: translate(0, -50%);
+    cursor: pointer;
+    color: #fff;
+    z-index: 1000;
+}
+
+.nextButton {
+    right: 50px;
+}
+
+.prevButton {
+    left: 50px;
+}

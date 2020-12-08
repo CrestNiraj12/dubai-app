@@ -1,0 +1,13 @@
+.navItem {
+    padding-left: 25px !important;
+    padding-right: 0 !important;
+}
+
+button,
+input {
+    border-radius: 0 !important;
+}
+
+input {
+    border: none !important;
+}
