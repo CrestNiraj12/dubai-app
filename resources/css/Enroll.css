@@ -1,0 +1,12 @@
+.enroll {
+    margin: 2% 30% 5% 30% !important;
+    width: 40%;
+}
+
+.enroll input {
+    background: #d5e2ee !important;
+}
+
+.enroll h2 {
+    margin: 5% 0;
+}

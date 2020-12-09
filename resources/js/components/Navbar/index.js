@@ -25,8 +25,8 @@ const NavBar = ({ courses }) => {
     };
 
     return (
-        <Navbar bg="dark" variant="dark" style={{ padding: "10px 10%" }}>
-            <Navbar.Brand href="/">Navbar</Navbar.Brand>
+        <Navbar bg="dark" variant="dark" style={{ padding: "20px 10%" }}>
+            <Navbar.Brand href="/">Dubai App</Navbar.Brand>
             <Nav
                 className="mr-auto"
                 activeKey={active}
@@ -41,8 +41,8 @@ const NavBar = ({ courses }) => {
                     title="Courses"
                     id="basic-nav-dropdown"
                 >
-                    {courses.map(({ title }, index) => (
-                        <NavDropdown.Item key={index} href="#action/3.1">
+                    {courses.map(({ id, title }, index) => (
+                        <NavDropdown.Item key={index} href={`/course/${id}`}>
                             {title}
                         </NavDropdown.Item>
                     ))}

@@ -1,13 +1,14 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
     Container,
     Jumbotron,
     Card,
     Row,
     CardColumns,
-    Button
+    Button,
+    Spinner
 } from "react-bootstrap";
-import LinesEllipsis from "react-lines-ellipsis";
+import HTMLEllipsis from "react-lines-ellipsis/lib/html";
 import { useHistory } from "react-router-dom";
 import "../../../css/Home.css";
 import Slider from "react-slick";
@@ -36,68 +37,88 @@ const Home = ({ courses }) => {
         nextArrow: <NextArrow />,
         prevArrow: <PrevArrow />
     };
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        setLoading(false);
+    }, []);
 
     return (
-        <Container fluid style={{ padding: 0 }}>
-            <Slider {...settings} style={{ overflow: "hidden" }}>
-                <div>
-                    <img src={BscImage} className="sliderImage" />
-                </div>
-                <div>
-                    <img src={BbaImage} className="sliderImage" />
-                </div>
-                <div>
-                    <img src={ACCAImage} className="sliderImage" />
-                </div>
-            </Slider>
-            <Container>
-                <Jumbotron>
-                    <h1>Welcome!</h1>
-                    <p>
-                        Browse through our reputed courses and get a degree
-                        recognized all over Europe with a high chance of job
-                        placements.
-                    </p>
-                </Jumbotron>
+        <>
+            {loading ? (
+                <Spinner animation="border" role="status">
+                    <span className="sr-only">Loading...</span>
+                </Spinner>
+            ) : (
+                <Container fluid style={{ padding: 0 }}>
+                    <Slider {...settings} style={{ overflow: "hidden" }}>
+                        <div>
+                            <img src={BscImage} className="sliderImage" />
+                        </div>
+                        <div>
+                            <img src={BbaImage} className="sliderImage" />
+                        </div>
+                        <div>
+                            <img src={ACCAImage} className="sliderImage" />
+                        </div>
+                    </Slider>
+                    <Container>
+                        <Jumbotron>
+                            <h1>Welcome!</h1>
+                            <p>
+                                Browse through our reputed courses and get a
+                                degree recognized all over Europe with a high
+                                chance of job placements.
+                            </p>
+                        </Jumbotron>
 
-                <Row>
-                    <CardColumns
-                        style={{
-                            widows: "2",
-                            orphans: "2"
-                        }}
-                    >
-                        {courses.map(
-                            ({ id, title, description, image }, index) => (
-                                <Card key={index}>
-                                    <Card.Img variant="top" src={image} />
-                                    <Card.Body>
-                                        <Card.Title>{title}</Card.Title>
-                                        <Card.Text as="div">
-                                            <LinesEllipsis
-                                                text={description}
-                                                maxLine="3"
-                                                ellipsis="..."
-                                                trimRight
-                                                basedOn="letters"
-                                            />
-                                        </Card.Text>
-                                        <Button
-                                            variant="primary"
+                        <Row>
+                            <CardColumns
+                                style={{
+                                    widows: "2",
+                                    orphans: "2"
+                                }}
+                            >
+                                {courses.map(
+                                    (
+                                        { id, title, description, image },
+                                        index
+                                    ) => (
+                                        <Card
+                                            key={index}
                                             onClick={() =>
                                                 history.push(`/course/${id}`)
                                             }
+                                            className="courseCard"
                                         >
-                                            Learn More
-                                        </Button>
-                                    </Card.Body>
-                                </Card>
-                            )
-                        )}
-                    </CardColumns>
-                </Row>
-            </Container>
-        </Container>
+                                            <Card.Img
+                                                variant="top"
+                                                className="cardImg"
+                                                src={image}
+                                            />
+                                            <Card.Body className="cardBody">
+                                                <Card.Title>{title}</Card.Title>
+                                                <Card.Text as="div">
+                                                    <HTMLEllipsis
+                                                        unsafeHTML={description}
+                                                        maxLine="3"
+                                                        ellipsis="..."
+                                                        basedOn="letters"
+                                                    />
+                                                </Card.Text>
+                                                <Button variant="primary">
+                                                    Learn More
+                                                </Button>
+                                            </Card.Body>
+                                        </Card>
+                                    )
+                                )}
+                            </CardColumns>
+                        </Row>
+                    </Container>
+                </Container>
+            )}
+        </>
     );
 };
 
