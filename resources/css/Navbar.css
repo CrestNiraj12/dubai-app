@@ -3,11 +3,11 @@
     padding-right: 0 !important;
 }
 
-button,
-input {
+.navigation button,
+.navigation input {
     border-radius: 0 !important;
 }
 
-input {
+.navigation input {
     border: none !important;
 }

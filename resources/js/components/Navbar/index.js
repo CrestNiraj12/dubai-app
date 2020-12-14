@@ -8,9 +8,11 @@ import {
     NavDropdown,
     Dropdown
 } from "react-bootstrap";
+import { useHistory } from "react-router-dom";
 import "../../../css/Navbar.css";
 
 const NavBar = ({ courses }) => {
+    var history = useHistory();
     const [active, setActive] = useState("/");
     const [query, setQuery] = useState("");
     const [searchResult, setSearchResults] = useState([]);
@@ -24,8 +26,19 @@ const NavBar = ({ courses }) => {
         setSearchResults([...results]);
     };
 
+    const handleSearchAll = e => {
+        e.preventDefault();
+        if (query.length > 0)
+            history.push(`/search?q=${query.trim().split("+")}`);
+    };
+
     return (
-        <Navbar bg="dark" variant="dark" style={{ padding: "20px 10%" }}>
+        <Navbar
+            className="navigation"
+            bg="dark"
+            variant="dark"
+            style={{ padding: "20px 10%" }}
+        >
             <Navbar.Brand href="/">Dubai App</Navbar.Brand>
             <Nav
                 className="mr-auto"
@@ -48,7 +61,11 @@ const NavBar = ({ courses }) => {
                     ))}
                 </NavDropdown>
             </Nav>
-            <Form inline style={{ position: "relative" }}>
+            <Form
+                inline
+                style={{ position: "relative" }}
+                onSubmit={handleSearchAll}
+            >
                 <Form.Group>
                     <Form.Control
                         type="text"
@@ -79,7 +96,11 @@ const NavBar = ({ courses }) => {
                         )}
                     </Dropdown.Menu>
                 </Form.Group>
-                <Button variant="outline-info" style={{ padding: "3px 10px" }}>
+                <Button
+                    variant="outline-info"
+                    style={{ padding: "3px 10px" }}
+                    onClick={handleSearchAll}
+                >
                     Search
                 </Button>
             </Form>

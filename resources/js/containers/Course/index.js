@@ -7,11 +7,15 @@ import {
     Button,
     Card,
     Table,
-    Spinner
+    Spinner,
+    Form
 } from "react-bootstrap";
 import BscImage from "../../../images/bsc.jpg";
 import Sticky from "react-sticky-el";
 import { useHistory } from "react-router-dom";
+import { AMOUNT } from "../../constants";
+import "../../../css/Course.css";
+import CouponForm from "../../components/CouponForm";
 
 const Course = ({ match }) => {
     var history = useHistory();
@@ -20,9 +24,13 @@ const Course = ({ match }) => {
         title: "Bsc (Hons) Computing",
         description:
             "<p>The BSc (Hons) Computing Programme at The British College is run in partnership with Leeds Beckett University, UK. Students studying this course will gain highly sought-after skills in computer programming, database development, networking, website development, systems modelling, and computer security. This course is equivalent to BSc CSIT and BIT in Nepal.</p><p>These are vital skills for gaining entry into organisations which demand confident and technically equipped computing graduates.</p><p>Students will have the opportunity to work on real-world projects, focusing on specialist areas of their choice, including web technology, network and communications, database or software development.</p>",
-        image: BscImage
+        image: BscImage,
+        yearly_fee: 12527.6,
+        uni_fee: 900
     };
 
+    const [discountedPrice, setDiscountedPrice] = useState(null);
+    const [validated, setValidated] = useState("");
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -247,35 +255,124 @@ const Course = ({ match }) => {
                                     </Card>
                                 </Row>
                                 <Row style={{ marginTop: "20px" }}>
+                                    <Card>
+                                        <Card.Header className="text-center">
+                                            Requirements
+                                        </Card.Header>
+                                        <Card.Body>
+                                            <h6> Foundation Entry</h6>
+                                            <ul>
+                                                <li>
+                                                    10+2/CBSE or equivalent 55%
+                                                    and above aggregate score
+                                                </li>
+                                                <li>
+                                                    A Level - Minimum 3.5
+                                                    credits with 3 full credits
+                                                </li>
+                                            </ul>
+                                            <h6>University Entry</h6>
+                                            <ul>
+                                                <li>
+                                                    Overall 75% & above with a
+                                                    minimum of 70% in English or
+                                                    IELTS Score of 6.0 with no
+                                                    less than 5.5 in any band.
+                                                </li>
+                                            </ul>
+                                        </Card.Body>
+                                    </Card>
+                                </Row>
+                                <Row style={{ marginTop: "20px" }}>
                                     <Sticky>
                                         <Card style={{ width: "375px" }}>
                                             <Card.Header className="text-center">
-                                                Requirements
+                                                Course Price
                                             </Card.Header>
                                             <Card.Body>
-                                                <h6> Foundation Entry</h6>
-                                                <ul>
-                                                    <li>
-                                                        10+2/CBSE or equivalent
-                                                        55% and above aggregate
-                                                        score
-                                                    </li>
-                                                    <li>
-                                                        A Level - Minimum 3.5
-                                                        credits with 3 full
-                                                        credits
-                                                    </li>
-                                                </ul>
-                                                <h6>University Entry</h6>
-                                                <ul>
-                                                    <li>
-                                                        Overall 75% & above with
-                                                        a minimum of 70% in
-                                                        English or IELTS Score
-                                                        of 6.0 with no less than
-                                                        5.5 in any band.
-                                                    </li>
-                                                </ul>
+                                                <p className="text-primary">
+                                                    <span
+                                                        className="courseAmount"
+                                                        style={{
+                                                            fontSize: validated
+                                                                ? "15px"
+                                                                : "25px",
+                                                            textDecoration: validated
+                                                                ? "line-through"
+                                                                : "none",
+                                                            color: validated
+                                                                ? "#e43333"
+                                                                : "inherit"
+                                                        }}
+                                                    >
+                                                        {(
+                                                            course.yearly_fee *
+                                                            4
+                                                        ).toLocaleString(
+                                                            undefined,
+                                                            {
+                                                                maximumFractionDigits: 2
+                                                            }
+                                                        ) +
+                                                            " " +
+                                                            AMOUNT}
+                                                    </span>
+                                                    {validated && (
+                                                        <span
+                                                            style={{
+                                                                fontSize:
+                                                                    "25px",
+                                                                display: "block"
+                                                            }}
+                                                        >
+                                                            {discountedPrice.toLocaleString(
+                                                                undefined,
+                                                                {
+                                                                    maximumFractionDigits: 2
+                                                                }
+                                                            ) +
+                                                                " " +
+                                                                AMOUNT}
+                                                        </span>
+                                                    )}
+                                                    <span
+                                                        style={{
+                                                            display: "block"
+                                                        }}
+                                                    >
+                                                        + £{course.uni_fee} x 3
+                                                        (university fee for each
+                                                        year paid)
+                                                    </span>
+                                                </p>
+                                                <small>
+                                                    <i>
+                                                        Note: University fee is
+                                                        paid at the end of each
+                                                        year separately in L4,
+                                                        L5 and L6 and is not
+                                                        included while paying
+                                                        the fee in the website
+                                                    </i>
+                                                </small>
+                                                <Row>
+                                                    <Col
+                                                        style={{
+                                                            padding: 0,
+                                                            marginTop: "20px"
+                                                        }}
+                                                    >
+                                                        <CouponForm
+                                                            course={course}
+                                                            setDiscountedPrice={
+                                                                setDiscountedPrice
+                                                            }
+                                                            setValidated={
+                                                                setValidated
+                                                            }
+                                                        />
+                                                    </Col>
+                                                </Row>
                                                 <Card.Text>
                                                     If you are eligible, what
                                                     are you waiting for?
