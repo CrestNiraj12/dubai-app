@@ -67,7 +67,7 @@ const SearchResult = ({ location, courses }) => {
                                             <Card.Img
                                                 variant="top"
                                                 className="cardImg"
-                                                src={image}
+                                                src={`/storage/${image}`}
                                             />
                                             <Card.Body className="cardBody">
                                                 <Card.Title>{title}</Card.Title>

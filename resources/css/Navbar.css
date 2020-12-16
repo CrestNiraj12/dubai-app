@@ -10,4 +10,13 @@
 
 .navigation input {
     border: none !important;
+    margin-right: 0 !important;
+}
+
+.navigation svg {
+    vertical-align: initial;
+}
+
+.navigation .searchButton {
+    border: 1px solid #3490dc;
 }

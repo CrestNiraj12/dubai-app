@@ -8,6 +8,7 @@ import {
     NavDropdown,
     Dropdown
 } from "react-bootstrap";
+import { Search } from "react-bootstrap-icons";
 import { useHistory } from "react-router-dom";
 import "../../../css/Navbar.css";
 
@@ -37,7 +38,7 @@ const NavBar = ({ courses }) => {
             className="navigation"
             bg="dark"
             variant="dark"
-            style={{ padding: "20px 10%" }}
+            style={{ padding: "15px 10%" }}
         >
             <Navbar.Brand href="/">Dubai App</Navbar.Brand>
             <Nav
@@ -73,8 +74,17 @@ const NavBar = ({ courses }) => {
                         value={query}
                         onChange={handleSearch}
                         className="mr-sm-2"
-                        style={{ height: "30px" }}
+                        style={{
+                            height: "30px"
+                        }}
                     />
+                    <Button
+                        className="searchButton"
+                        onClick={handleSearchAll}
+                        style={{ height: "30px" }}
+                    >
+                        <Search />
+                    </Button>
                     <Dropdown.Menu show={!!query} style={{ maxWidth: "185px" }}>
                         {searchResult.length > 0 ? (
                             searchResult.map(({ id, title }, index) => (
@@ -96,14 +106,18 @@ const NavBar = ({ courses }) => {
                         )}
                     </Dropdown.Menu>
                 </Form.Group>
-                <Button
-                    variant="outline-info"
-                    style={{ padding: "3px 10px" }}
-                    onClick={handleSearchAll}
-                >
-                    Search
-                </Button>
             </Form>
+            <Button
+                variant="outline-info"
+                style={{
+                    padding: "4.5px 10px",
+                    marginLeft: "10px",
+                    fontSize: "12px"
+                }}
+                onClick={handleSearchAll}
+            >
+                Login/Register
+            </Button>
         </Navbar>
     );
 };

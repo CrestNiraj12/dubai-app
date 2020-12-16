@@ -1,19 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { Form, Row, Col, Button } from "react-bootstrap";
-import { PERCENTAGE, YEARLY, SEMESTER } from "../../constants";
+import { PERCENTAGE, YEARLY, SEMESTER, AMOUNT } from "../../constants";
+import axios from "axios";
 
 const CouponForm = ({ setDiscountedPrice, setValidated, course }) => {
     const [coupon, setCoupon] = useState("");
     const [validatedOwn, setValidateOwn] = useState("");
 
-    const [coupons, setCoupons] = useState([
-        {
-            code: "TEST25",
-            discount: 25,
-            type: PERCENTAGE,
-            discount_period: SEMESTER
-        }
-    ]);
+    const [coupons, setCoupons] = useState([]);
 
     useEffect(() => {
         const discount = JSON.parse(localStorage.getItem("discount"));
@@ -22,7 +16,11 @@ const CouponForm = ({ setDiscountedPrice, setValidated, course }) => {
             setValidateOwn(true);
             setValidated(true);
             setDiscountedPrice(discount.discountedAmount);
-        }
+        } else
+            axios
+                .get("/api/coupons")
+                .then(res => setCoupons(res.data))
+                .catch(err => console.log(err));
     }, []);
 
     const handleApplyCoupon = e => {
@@ -30,16 +28,16 @@ const CouponForm = ({ setDiscountedPrice, setValidated, course }) => {
         if (coupons.map(c => c.code).includes(coupon)) {
             setValidateOwn(true);
             setValidated(true);
-            const period = coupons.find(c => c.code === coupon).discount_period;
+            const period = validCoupon.discount_period;
             const period_fee =
                 period === YEARLY ? course.yearly_fee : course.yearly_fee / 2;
-            const discount_type = coupons.find(c => c.code === coupon).type;
-            const discount = coupons.find(c => c.code === coupon).discount;
+            const discount_type = validCoupon.type;
+            const discount = validCoupon.discount;
             const discount_amount =
                 discount_type === PERCENTAGE
                     ? (discount / 100) * period_fee
                     : discount;
-            setDiscountedPrice(period_fee - discount_amount);
+            setDiscountedPrice(course.yearly_fee * 4 - discount_amount);
             localStorage.setItem(
                 "discount",
                 JSON.stringify({
@@ -58,6 +56,10 @@ const CouponForm = ({ setDiscountedPrice, setValidated, course }) => {
             setValidated(false);
         }
     };
+
+    const validCoupon = validatedOwn
+        ? coupons.find(c => c.code === coupon)
+        : null;
 
     return (
         <Form
@@ -93,16 +95,15 @@ const CouponForm = ({ setDiscountedPrice, setValidated, course }) => {
                         <Form.Control.Feedback type="invalid">
                             <small>Coupon code is invalid!</small>
                         </Form.Control.Feedback>
-                        {validatedOwn && (
+                        {coupons.length > 0 && validatedOwn && (
                             <small style={{ color: "#2c9203" }}>
                                 Applied{" "}
-                                {`${
-                                    coupons.find(c => c.code === coupon)
-                                        .discount
-                                }${
-                                    coupons.find(c => c.code === coupon).type
+                                {`${validCoupon.discount}${
+                                    validCoupon.type === PERCENTAGE
+                                        ? PERCENTAGE
+                                        : " " + AMOUNT
                                 }`}{" "}
-                                discount for a{" "}
+                                discount for the{" "}
                                 {coupons
                                     .find(c => c.code === coupon)
                                     .discount_period.toLowerCase()}

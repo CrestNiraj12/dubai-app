@@ -10,7 +10,6 @@ import {
     Spinner,
     Form
 } from "react-bootstrap";
-import BscImage from "../../../images/bsc.jpg";
 import Sticky from "react-sticky-el";
 import { useHistory } from "react-router-dom";
 import { AMOUNT } from "../../constants";
@@ -168,7 +167,7 @@ const Course = ({ match }) => {
                                                     >
                                                         + £{course.uni_fee} x 3
                                                         (university fee for each
-                                                        year paid)
+                                                        year)
                                                     </span>
                                                 </p>
                                                 <small>
