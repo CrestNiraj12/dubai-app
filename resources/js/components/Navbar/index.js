@@ -114,7 +114,7 @@ const NavBar = ({ courses }) => {
                     marginLeft: "10px",
                     fontSize: "12px"
                 }}
-                onClick={handleSearchAll}
+                onClick={() => history.push("/login")}
             >
                 Login/Register
             </Button>

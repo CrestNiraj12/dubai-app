@@ -22,3 +22,7 @@ label,
 button {
     font-family: "Quicksand", sans-serif !important;
 }
+
+.jumbotron {
+    margin: 10px;
+}

@@ -1,0 +1,6 @@
+.cardLayout > div[class*="col-"] {
+    display: flex;
+    flex: 1 0 auto;
+    padding: 0px 10px;
+    margin-top: 20px;
+}

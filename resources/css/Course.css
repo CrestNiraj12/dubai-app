@@ -1,7 +1,38 @@
-.cardWidth {
-    width: 375px;
-}
-
 .courseAmount {
     transition: font-size 0.2s ease-out, color 0.2s ease-out;
+}
+
+.sideinfo div[class*="col-"] {
+    padding: 0;
+}
+
+.thumbnail-course {
+    height: 500px;
+    object-fit: "cover";
+}
+.cardTopSpacing {
+    margin-top: 20px;
+}
+
+@media only screen and (min-width: 992px) {
+    .sideinfo {
+        padding-right: 0;
+        padding-left: 30px;
+    }
+}
+
+@media only screen and (max-width: 1200px) {
+    .thumbnail-course {
+        height: 400px;
+    }
+}
+
+@media only screen and (max-width: 992px) {
+    .course-content .col-md-12 {
+        padding: 0;
+    }
+
+    .sideinfo {
+        margin-top: 20px;
+    }
 }

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { Form, Row, Col, Button } from "react-bootstrap";
-import { PERCENTAGE, YEARLY, SEMESTER, AMOUNT } from "../../constants";
+import { Form, Row, Button } from "react-bootstrap";
+import { PERCENTAGE, YEARLY, AMOUNT } from "../../constants";
 import axios from "axios";
 
 const CouponForm = ({ setDiscountedPrice, setValidated, course }) => {
@@ -22,6 +22,10 @@ const CouponForm = ({ setDiscountedPrice, setValidated, course }) => {
                 .then(res => setCoupons(res.data))
                 .catch(err => console.log(err));
     }, []);
+
+    const validCoupon = coupons.map(c => c.code).includes(coupon)
+        ? coupons.find(c => c.code === coupon)
+        : null;
 
     const handleApplyCoupon = e => {
         e.preventDefault();
@@ -57,10 +61,6 @@ const CouponForm = ({ setDiscountedPrice, setValidated, course }) => {
         }
     };
 
-    const validCoupon = validatedOwn
-        ? coupons.find(c => c.code === coupon)
-        : null;
-
     return (
         <Form
             noValidate
@@ -73,60 +73,41 @@ const CouponForm = ({ setDiscountedPrice, setValidated, course }) => {
             <Form.Group>
                 <Form.Label>Apply Coupon (Optional)</Form.Label>
                 <Row>
-                    <Col
-                        md="9"
-                        style={{
-                            padding: 0
-                        }}
+                    <Form.Control
+                        value={coupon}
+                        type="text"
+                        onChange={e => setCoupon(e.target.value.toUpperCase())}
+                        isInvalid={
+                            validatedOwn === "" ? validatedOwn : !validatedOwn
+                        }
+                        style={{ width: "60%", marginRight: "10px" }}
+                        disabled={validatedOwn}
+                    />
+                    <Form.Control.Feedback type="invalid">
+                        <small>Coupon code is invalid!</small>
+                    </Form.Control.Feedback>
+                    {coupons.length > 0 && validatedOwn && (
+                        <small style={{ color: "#2c9203" }}>
+                            Applied{" "}
+                            {`${validCoupon.discount}${
+                                validCoupon.type === PERCENTAGE
+                                    ? PERCENTAGE
+                                    : " " + AMOUNT
+                            }`}{" "}
+                            discount for the{" "}
+                            {coupons
+                                .find(c => c.code === coupon)
+                                .discount_period.toLowerCase()}
+                            !
+                        </small>
+                    )}
+                    <Button
+                        onClick={handleApplyCoupon}
+                        disabled={validatedOwn}
+                        style={{ width: "30%" }}
                     >
-                        <Form.Control
-                            value={coupon}
-                            type="text"
-                            onChange={e =>
-                                setCoupon(e.target.value.toUpperCase())
-                            }
-                            isInvalid={
-                                validatedOwn === ""
-                                    ? validatedOwn
-                                    : !validatedOwn
-                            }
-                            disabled={validatedOwn}
-                        />
-                        <Form.Control.Feedback type="invalid">
-                            <small>Coupon code is invalid!</small>
-                        </Form.Control.Feedback>
-                        {coupons.length > 0 && validatedOwn && (
-                            <small style={{ color: "#2c9203" }}>
-                                Applied{" "}
-                                {`${validCoupon.discount}${
-                                    validCoupon.type === PERCENTAGE
-                                        ? PERCENTAGE
-                                        : " " + AMOUNT
-                                }`}{" "}
-                                discount for the{" "}
-                                {coupons
-                                    .find(c => c.code === coupon)
-                                    .discount_period.toLowerCase()}
-                                !
-                            </small>
-                        )}
-                    </Col>
-                    <Col
-                        md="3"
-                        style={{
-                            paddingRight: 0
-                        }}
-                    >
-                        <Button
-                            onClick={handleApplyCoupon}
-                            style={{
-                                width: "100%"
-                            }}
-                            disabled={validatedOwn}
-                        >
-                            Apply
-                        </Button>
-                    </Col>
+                        Apply
+                    </Button>
                 </Row>
             </Form.Group>
         </Form>
