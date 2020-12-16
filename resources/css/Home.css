@@ -56,8 +56,13 @@
     transform: translateY(-30px);
 }
 
-.spinner-border {
+.pageLoader {
     position: absolute;
     top: 50%;
     left: 50%;
+}
+
+.cardImg {
+    height: 250px;
+    object-fit: cover;
 }

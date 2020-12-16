@@ -46,7 +46,11 @@ const Home = ({ courses }) => {
     return (
         <>
             {loading ? (
-                <Spinner animation="border" role="status">
+                <Spinner
+                    animation="border"
+                    role="status"
+                    className="pageLoader"
+                >
                     <span className="sr-only">Loading...</span>
                 </Spinner>
             ) : (
@@ -94,7 +98,7 @@ const Home = ({ courses }) => {
                                             <Card.Img
                                                 variant="top"
                                                 className="cardImg"
-                                                src={image}
+                                                src={`\\storage\\${image}`}
                                             />
                                             <Card.Body className="cardBody">
                                                 <Card.Title>{title}</Card.Title>

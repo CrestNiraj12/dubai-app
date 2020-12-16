@@ -19,21 +19,25 @@ import CouponForm from "../../components/CouponForm";
 
 const Course = ({ match }) => {
     var history = useHistory();
-    const course = {
-        id: 1,
-        title: "Bsc (Hons) Computing",
-        description:
-            "<p>The BSc (Hons) Computing Programme at The British College is run in partnership with Leeds Beckett University, UK. Students studying this course will gain highly sought-after skills in computer programming, database development, networking, website development, systems modelling, and computer security. This course is equivalent to BSc CSIT and BIT in Nepal.</p><p>These are vital skills for gaining entry into organisations which demand confident and technically equipped computing graduates.</p><p>Students will have the opportunity to work on real-world projects, focusing on specialist areas of their choice, including web technology, network and communications, database or software development.</p>",
-        image: BscImage,
-        yearly_fee: 12527.6,
-        uni_fee: 900
-    };
-
     const [discountedPrice, setDiscountedPrice] = useState(null);
     const [validated, setValidated] = useState("");
     const [loading, setLoading] = useState(true);
+    const [course, setCourse] = useState({
+        id: "",
+        title: "",
+        description: "",
+        facts: "",
+        image: "",
+        requirements: "",
+        uni_fee: "",
+        yearly_fee: ""
+    });
 
     useEffect(() => {
+        axios
+            .get(`/api/courses/${match.params.id}`)
+            .then(res => setCourse(res.data))
+            .catch(err => console.log(err));
         setLoading(false);
     }, []);
 
@@ -59,233 +63,55 @@ const Course = ({ match }) => {
                             <Col md={8} style={{ paddingLeft: 0 }}>
                                 <Row>
                                     <img
-                                        src={course.image}
+                                        src={`\\storage\\${course.image}`}
                                         width={"100%"}
+                                        style={{
+                                            height: "500px",
+                                            objectFit: "cover"
+                                        }}
                                         alt={course.title}
                                     />
                                 </Row>
                                 <Row style={{ marginTop: "30px" }}>
-                                    <p
-                                        dangerouslySetInnerHTML={{
-                                            __html: course.description
-                                        }}
-                                    ></p>
-                                </Row>
-                                <Row>
                                     <h4>Course Details</h4>
-                                    <p>
-                                        The degree programme is comprised of a
-                                        one year Foundation Year provided by The
-                                        British College followed by a three-year
-                                        degree validated by Leeds Beckett
-                                        University.
-                                    </p>
-                                    <b>What is Year 0 or Level 3?</b>
-                                    <p>
-                                        Year 0 in The British College is a
-                                        Foundation Year (Certificate to be
-                                        awarded by The British College) that is
-                                        designed to help students progress into
-                                        BSc (Hons) Computing degree. The aim of
-                                        this year is to: assist students to
-                                        adapt to the UK style of learning,
-                                        improve students' English ability, and
-                                        introduce the necessary skills required
-                                        for higher education.
-                                    </p>
-                                    <p>
-                                        Year 0 or Level 3 consists of 8 modules.
-                                    </p>
-                                    <Table striped bordered>
-                                        <thead>
-                                            <tr>
-                                                <th colSpan={2}>Semester 1</th>
-                                                <th colSpan={2}>Semester 2</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>
-                                                    Academic English & Study
-                                                    skills
-                                                </td>
-                                                <td>15 credits</td>
-                                                <td>
-                                                    Fundamentals of Multimedia
-                                                </td>
-                                                <td>15 credits</td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    Fundamentals of Data Science
-                                                </td>
-                                                <td>15 credits</td>
-                                                <td>
-                                                    Object-Oriented Programming
-                                                </td>
-                                                <td>15 credits</td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    Introduction to Programming
-                                                </td>
-                                                <td>15 credits</td>
-                                                <td>
-                                                    Mathematics for Computing
-                                                </td>
-                                                <td>15 credits</td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    Computer Fundamentals and
-                                                    Network
-                                                </td>
-                                                <td>15 credits</td>
-                                                <td>Internet Technologies</td>
-                                                <td>15 credits</td>
-                                            </tr>
-                                        </tbody>
-                                    </Table>
-                                    <p>
-                                        After the Foundation Year, students will
-                                        be registered with Leeds Beckett
-                                        University, the programme can be
-                                        completed entirely in Kathmandu,
-                                        however, transfers to Leeds are also
-                                        possible for interested students.{" "}
-                                    </p>
-                                    <p>
-                                        Year 1 or Level 4 consists of 6 core
-                                        modules totalling 120 credits
-                                    </p>
-                                    <Table striped bordered>
-                                        <thead>
-                                            <tr>
-                                                <th colSpan={2}>Semester 1</th>
-                                                <th colSpan={2}>Semester 2</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>
-                                                    Academic English & Study
-                                                    skills
-                                                </td>
-                                                <td>15 credits</td>
-                                                <td>
-                                                    Fundamentals of Multimedia
-                                                </td>
-                                                <td>15 credits</td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    Fundamentals of Data Science
-                                                </td>
-                                                <td>15 credits</td>
-                                                <td>
-                                                    Object-Oriented Programming
-                                                </td>
-                                                <td>15 credits</td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    Introduction to Programming
-                                                </td>
-                                                <td>15 credits</td>
-                                                <td>
-                                                    Mathematics for Computing
-                                                </td>
-                                                <td>15 credits</td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    Computer Fundamentals and
-                                                    Network
-                                                </td>
-                                                <td>15 credits</td>
-                                                <td>Internet Technologies</td>
-                                                <td>15 credits</td>
-                                            </tr>
-                                        </tbody>
-                                    </Table>
                                 </Row>
+                                <Row
+                                    dangerouslySetInnerHTML={{
+                                        __html: course.description
+                                    }}
+                                ></Row>
                             </Col>
                             <Col
                                 md={4}
                                 style={{ paddingRight: 0, paddingLeft: "30px" }}
                             >
                                 <Row>
-                                    <Card>
+                                    <Card className="cardWidth">
                                         <Card.Header className="text-center">
-                                            <h5>Key Facts</h5>
+                                            Key Facts
                                         </Card.Header>
-                                        <Card.Body>
-                                            <ul>
-                                                <li>
-                                                    UK standard teaching rooms
-                                                    (See 3D Tour)
-                                                </li>
-                                                <li>
-                                                    State-of-the-art computer
-                                                    labs (Open access Computer
-                                                    lab, Computer forensic &
-                                                    security lab)
-                                                </li>
-                                                <li>
-                                                    Highly qualified teachers
-                                                    and engineers
-                                                </li>
-                                                <li>
-                                                    Modern library with access
-                                                    to international course
-                                                    books, journals and other
-                                                    printed material
-                                                </li>
-                                                <li>
-                                                    Virtual Learning Environment
-                                                    (VLE)
-                                                </li>
-                                                <li>
-                                                    A subscription to
-                                                    Microsoft's Developer
-                                                    Network (MSDN)
-                                                </li>
-                                            </ul>
-                                        </Card.Body>
+                                        <Card.Body
+                                            dangerouslySetInnerHTML={{
+                                                __html: course.facts
+                                            }}
+                                        ></Card.Body>
                                     </Card>
                                 </Row>
                                 <Row style={{ marginTop: "20px" }}>
-                                    <Card>
+                                    <Card className="cardWidth">
                                         <Card.Header className="text-center">
                                             Requirements
                                         </Card.Header>
-                                        <Card.Body>
-                                            <h6> Foundation Entry</h6>
-                                            <ul>
-                                                <li>
-                                                    10+2/CBSE or equivalent 55%
-                                                    and above aggregate score
-                                                </li>
-                                                <li>
-                                                    A Level - Minimum 3.5
-                                                    credits with 3 full credits
-                                                </li>
-                                            </ul>
-                                            <h6>University Entry</h6>
-                                            <ul>
-                                                <li>
-                                                    Overall 75% & above with a
-                                                    minimum of 70% in English or
-                                                    IELTS Score of 6.0 with no
-                                                    less than 5.5 in any band.
-                                                </li>
-                                            </ul>
-                                        </Card.Body>
+                                        <Card.Body
+                                            dangerouslySetInnerHTML={{
+                                                __html: course.requirements
+                                            }}
+                                        ></Card.Body>
                                     </Card>
                                 </Row>
                                 <Row style={{ marginTop: "20px" }}>
                                     <Sticky>
-                                        <Card style={{ width: "375px" }}>
+                                        <Card className="cardWidth">
                                             <Card.Header className="text-center">
                                                 Course Price
                                             </Card.Header>

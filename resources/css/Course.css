@@ -1,3 +1,7 @@
+.cardWidth {
+    width: 375px;
+}
+
 .courseAmount {
     transition: font-size 0.2s ease-out, color 0.2s ease-out;
 }

@@ -291,6 +291,7 @@ const Payment = ({ course }) => {
                                             size="sm"
                                             role="status"
                                             aria-hidden="true"
+                                            className="buttonLoader"
                                         />
                                         <span className="sr-only">
                                             Loading...
