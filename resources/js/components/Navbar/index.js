@@ -107,19 +107,20 @@ const NavBar = ({ courses }) => {
                     </Dropdown.Menu>
                 </Form.Group>
             </Form>
-            <Button
-                variant="outline-info"
-                style={{
-                    padding: "4.5px 10px",
-                    marginLeft: "10px",
-                    fontSize: "12px"
-                }}
-                onClick={() => history.push("/login")}
-            >
-                Login/Register
-            </Button>
         </Navbar>
     );
 };
 
 export default NavBar;
+
+/*<Button
+    variant="outline-info"
+    style={{
+        padding: "4.5px 10px",
+        marginLeft: "10px",
+        fontSize: "12px"
+    }}
+    onClick={() => history.push("/login")}
+>
+    Login/Register
+</Button>*/
