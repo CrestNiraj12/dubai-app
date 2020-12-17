@@ -8,16 +8,27 @@
 
 .thumbnail-course {
     height: 500px;
-    object-fit: "cover";
+    object-fit: cover;
 }
 .cardTopSpacing {
     margin-top: 20px;
+}
+
+.breadcrumb {
+    margin: 20px 0;
+}
+.course-content {
+    margin-bottom: 10%;
 }
 
 @media only screen and (min-width: 992px) {
     .sideinfo {
         padding-right: 0;
         padding-left: 30px;
+    }
+
+    .course-title {
+        margin: 30px 0;
     }
 }
 
@@ -32,7 +43,15 @@
         padding: 0;
     }
 
+    .course-title {
+        margin: 15px 0;
+    }
+
     .sideinfo {
         margin-top: 20px;
+    }
+
+    .thumbnail-course {
+        height: 200px;
     }
 }

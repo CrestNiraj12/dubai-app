@@ -33,17 +33,7 @@ class CourseController extends Controller
         return response()->json($course);
     }
 
-    public function update(Request $request) {
-        $request->validate([
-            'title'        => 'required',
-            'description'  => 'required',
-            'facts'        => 'required',
-            'requirements' => 'required',
-            'image'        => 'required',
-            'yearly_fee'   => 'required',
-            'uni_fee'      => 'required'
-        ]);
-        
+    public function update(Request $request, $id) {
         Course::where('id', $id)->update($request->all());
         return response()->json(['message'=> 'Course updated successfully!']);
     }

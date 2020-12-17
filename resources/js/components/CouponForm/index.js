@@ -10,12 +10,17 @@ const CouponForm = ({ setDiscountedPrice, setValidated, course }) => {
     const [coupons, setCoupons] = useState([]);
 
     useEffect(() => {
-        const discount = JSON.parse(localStorage.getItem("discount"));
-        if (discount) {
-            setCoupon(discount.code);
-            setValidateOwn(true);
-            setValidated(true);
-            setDiscountedPrice(discount.discountedAmount);
+        const couponId = localStorage.getItem("couponId");
+        if (couponId) {
+            axios.get(`/api/coupons/${couponId}`).then(res => {
+                setCoupon(res.data.code);
+                setValidateOwn(true);
+                setValidated(true);
+                setDiscountedPrice(
+                    course.yearly_fee * 4 -
+                        Number(localStorage.getItem("discount"))
+                );
+            });
         } else
             axios
                 .get("/api/coupons")
@@ -32,29 +37,19 @@ const CouponForm = ({ setDiscountedPrice, setValidated, course }) => {
         if (coupons.map(c => c.code).includes(coupon)) {
             setValidateOwn(true);
             setValidated(true);
-            const period = validCoupon.discount_period;
+
             const period_fee =
-                period === YEARLY ? course.yearly_fee : course.yearly_fee / 2;
-            const discount_type = validCoupon.type;
-            const discount = validCoupon.discount;
+                validCoupon.discount_period === YEARLY
+                    ? course.yearly_fee
+                    : course.yearly_fee / 2;
             const discount_amount =
-                discount_type === PERCENTAGE
-                    ? (discount / 100) * period_fee
-                    : discount;
+                validCoupon.type === PERCENTAGE
+                    ? (validCoupon.discount / 100) * period_fee
+                    : validCoupon.discount;
+
             setDiscountedPrice(course.yearly_fee * 4 - discount_amount);
-            localStorage.setItem(
-                "discount",
-                JSON.stringify({
-                    code: coupon,
-                    discount_period: period,
-                    discount: discount,
-                    type: discount_type,
-                    amount: discount_amount,
-                    semester: course.yearly_fee / 2 - discount_amount,
-                    yearly: course.yearly_fee - discount_amount,
-                    discountedAmount: course.yearly_fee * 4 - discount_amount
-                })
-            );
+            localStorage.setItem("couponId", validCoupon.id);
+            localStorage.setItem("discount", discount_amount);
         } else {
             setValidateOwn(false);
             setValidated(false);
@@ -83,6 +78,13 @@ const CouponForm = ({ setDiscountedPrice, setValidated, course }) => {
                         style={{ width: "60%", marginRight: "10px" }}
                         disabled={validatedOwn}
                     />
+                    <Button
+                        onClick={handleApplyCoupon}
+                        disabled={validatedOwn}
+                        style={{ width: "30%" }}
+                    >
+                        Apply
+                    </Button>
                     <Form.Control.Feedback type="invalid">
                         <small>Coupon code is invalid!</small>
                     </Form.Control.Feedback>
@@ -101,13 +103,6 @@ const CouponForm = ({ setDiscountedPrice, setValidated, course }) => {
                             !
                         </small>
                     )}
-                    <Button
-                        onClick={handleApplyCoupon}
-                        disabled={validatedOwn}
-                        style={{ width: "30%" }}
-                    >
-                        Apply
-                    </Button>
                 </Row>
             </Form.Group>
         </Form>

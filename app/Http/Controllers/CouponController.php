@@ -30,14 +30,7 @@ class CouponController extends Controller
         return response()->json($coupon);
     }
 
-    public function update(Request $request) {
-        $request->validate([
-            'code'             => 'required',
-            'discount_period'  => 'required',
-            'discount'         => 'required',
-            'type'             => 'required',
-        ]);
-        
+    public function update(Request $request, $id) {  
         Coupon::where('id', $id)->update($request->all());
         return response()->json(['message'=> 'Coupon updated successfully!']);
     }

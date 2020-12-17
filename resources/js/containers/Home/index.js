@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Container, Jumbotron, Row, Spinner } from "react-bootstrap";
+import { Container, Jumbotron, Row } from "react-bootstrap";
 import "../../../css/Home.css";
 import Slider from "react-slick";
 import BscImage from "../../../images/bsc.jpg";
@@ -12,6 +12,7 @@ import {
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import CoursesCardLayout from "../../components/CoursesCardLayout";
+import PageLoadSpinner from "../../components/PageLoadSpinner";
 
 const Home = ({ courses }) => {
     const settings = {
@@ -36,13 +37,7 @@ const Home = ({ courses }) => {
     return (
         <>
             {loading ? (
-                <Spinner
-                    animation="border"
-                    role="status"
-                    className="pageLoader"
-                >
-                    <span className="sr-only">Loading...</span>
-                </Spinner>
+                <PageLoadSpinner />
             ) : (
                 <Container fluid style={{ padding: 0 }}>
                     <Slider {...settings} style={{ overflow: "hidden" }}>
@@ -56,7 +51,7 @@ const Home = ({ courses }) => {
                             <img src={ACCAImage} className="sliderImage" />
                         </div>
                     </Slider>
-                    <Container>
+                    <Container className="home-container">
                         <Jumbotron>
                             <h1>Welcome!</h1>
                             <p>

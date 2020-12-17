@@ -20,3 +20,17 @@
 .navigation .searchButton {
     border: 1px solid #3490dc;
 }
+
+@media screen and (min-width: 992px) {
+    .navigation {
+        padding: 15px 10%;
+    }
+}
+
+@media screen and (max-width: 992px) {
+    .navigation .form-group {
+        width: 90%;
+        margin: 5%;
+        display: flex;
+    }
+}

@@ -24,6 +24,14 @@ class CreateApplicantsTable extends Migration
             $table->decimal('gpa', 3, 2);
             $table->text('school', 10, 2);
             $table->text('address', 10, 2);
+            $table->boolean('coupon_applied');
+            $table->boolean('payment_made')->default(false);
+            $table->timestamps();
+        });
+
+        Schema::table('applicants', function (Blueprint $table) {
+            $table->foreignId('course_id')->constrained('courses');
+            $table->foreignId('coupon_id')->nullable()->constrained('coupons');
         });
     }
 

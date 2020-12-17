@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { Col, Container, Row, Spinner } from "react-bootstrap";
+import { Col, Container, Row } from "react-bootstrap";
 import qs from "query-string";
-import { Link } from "react-router-dom";
 import CoursesCardLayout from "../../components/CoursesCardLayout";
+import PageLoadSpinner from "../../components/PageLoadSpinner";
 
 const SearchResult = ({ location, courses }) => {
     const [query, setQuery] = useState("");
@@ -24,13 +24,7 @@ const SearchResult = ({ location, courses }) => {
     return (
         <>
             {loading ? (
-                <Spinner
-                    animation="border"
-                    role="status"
-                    className="pageLoader"
-                >
-                    <span className="sr-only">Loading...</span>
-                </Spinner>
+                <PageLoadSpinner />
             ) : (
                 <Container>
                     <Row>

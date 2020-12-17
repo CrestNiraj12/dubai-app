@@ -29,8 +29,10 @@ const NavBar = ({ courses }) => {
 
     const handleSearchAll = e => {
         e.preventDefault();
-        if (query.length > 0)
-            history.push(`/search?q=${query.trim().split("+")}`);
+        const query_temp = query;
+        setQuery("");
+        if (query_temp.length > 0)
+            history.push(`/search?q=${query_temp.trim().split("+")}`);
     };
 
     return (
@@ -38,89 +40,88 @@ const NavBar = ({ courses }) => {
             className="navigation"
             bg="dark"
             variant="dark"
-            style={{ padding: "15px 10%" }}
+            collapseOnSelect
+            expand="lg"
         >
             <Navbar.Brand href="/">Dubai App</Navbar.Brand>
-            <Nav
-                className="mr-auto"
-                activeKey={active}
-                onSelect={selectedKey => setActive(selectedKey)}
-            >
-                <Nav.Link href="/" className="navItem">
-                    Home
-                </Nav.Link>
-
-                <NavDropdown
-                    className="navItem"
-                    title="Courses"
-                    id="basic-nav-dropdown"
+            <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+            <Navbar.Collapse id="responsive-navbar-nav">
+                <Nav
+                    className="mr-auto"
+                    activeKey={active}
+                    onSelect={selectedKey => setActive(selectedKey)}
                 >
-                    {courses.map(({ id, title }, index) => (
-                        <NavDropdown.Item key={index} href={`/course/${id}`}>
-                            {title}
-                        </NavDropdown.Item>
-                    ))}
-                </NavDropdown>
-            </Nav>
-            <Form
-                inline
-                style={{ position: "relative" }}
-                onSubmit={handleSearchAll}
-            >
-                <Form.Group>
-                    <Form.Control
-                        type="text"
-                        placeholder="Search"
-                        value={query}
-                        onChange={handleSearch}
-                        className="mr-sm-2"
-                        style={{
-                            height: "30px"
-                        }}
-                    />
-                    <Button
-                        className="searchButton"
-                        onClick={handleSearchAll}
-                        style={{ height: "30px" }}
+                    <Nav.Link href="/" className="navItem">
+                        Home
+                    </Nav.Link>
+
+                    <NavDropdown
+                        className="navItem"
+                        title="Courses"
+                        id="basic-nav-dropdown"
                     >
-                        <Search />
-                    </Button>
-                    <Dropdown.Menu show={!!query} style={{ maxWidth: "185px" }}>
-                        {searchResult.length > 0 ? (
-                            searchResult.map(({ id, title }, index) => (
-                                <Dropdown.Item
-                                    key={id + index}
-                                    href={`/course/${id}`}
-                                    style={{
-                                        overflow: "hidden",
-                                        textOverflow: "ellipsis"
-                                    }}
-                                >
-                                    {title}
+                        {courses.map(({ id, title }, index) => (
+                            <NavDropdown.Item
+                                key={index}
+                                href={`/course/${id}`}
+                            >
+                                {title}
+                            </NavDropdown.Item>
+                        ))}
+                    </NavDropdown>
+                </Nav>
+
+                <Form
+                    inline
+                    style={{ position: "relative" }}
+                    onSubmit={handleSearchAll}
+                >
+                    <Form.Group>
+                        <Form.Control
+                            type="text"
+                            placeholder="Search"
+                            value={query}
+                            onChange={handleSearch}
+                            className="mr-sm-2"
+                            style={{
+                                height: "30px"
+                            }}
+                        />
+                        <Button
+                            className="searchButton"
+                            onClick={handleSearchAll}
+                            style={{ height: "30px" }}
+                        >
+                            <Search />
+                        </Button>
+                        <Dropdown.Menu
+                            show={!!query}
+                            style={{ maxWidth: "185px" }}
+                        >
+                            {searchResult.length > 0 ? (
+                                searchResult.map(({ id, title }, index) => (
+                                    <Dropdown.Item
+                                        key={id + index}
+                                        href={`/course/${id}`}
+                                        style={{
+                                            overflow: "hidden",
+                                            textOverflow: "ellipsis"
+                                        }}
+                                    >
+                                        {title}
+                                    </Dropdown.Item>
+                                ))
+                            ) : (
+                                <Dropdown.Item disabled>
+                                    No results found!
                                 </Dropdown.Item>
-                            ))
-                        ) : (
-                            <Dropdown.Item disabled>
-                                No results found!
-                            </Dropdown.Item>
-                        )}
-                    </Dropdown.Menu>
-                </Form.Group>
-            </Form>
+                            )}
+                        </Dropdown.Menu>
+                    </Form.Group>
+                </Form>
+            </Navbar.Collapse>
         </Navbar>
     );
 };
 
 export default NavBar;
-
-/*<Button
-    variant="outline-info"
-    style={{
-        padding: "4.5px 10px",
-        marginLeft: "10px",
-        fontSize: "12px"
-    }}
-    onClick={() => history.push("/login")}
->
-    Login/Register
-</Button>*/

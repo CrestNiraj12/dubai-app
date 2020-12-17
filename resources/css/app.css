@@ -21,8 +21,35 @@ a,
 label,
 button {
     font-family: "Quicksand", sans-serif !important;
+    overflow-wrap: anywhere;
 }
 
 .jumbotron {
-    margin: 10px;
+    margin: 10px 25px;
+}
+
+@media screen and (max-width: 600px) {
+    .jumbotron {
+        margin: 50px 25px;
+        padding: 1rem;
+    }
+
+    .jumbotron h1 {
+        text-align: center;
+        padding: 20px 0;
+    }
+
+    .jumbotron p {
+        padding: 0 20px;
+    }
+}
+
+.row {
+    width: 100%;
+}
+
+.container {
+    margin: 2% 10% !important;
+    padding: 0 !important;
+    max-width: 80%;
 }

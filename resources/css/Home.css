@@ -1,9 +1,3 @@
-.container {
-    margin: 2% 10% !important;
-    padding: 0 !important;
-    max-width: 80%;
-}
-
 .row {
     margin-left: 0 !important;
     margin-right: 0 !important;
@@ -65,4 +59,20 @@
 .cardImg {
     height: 250px;
     object-fit: cover;
+}
+
+@media screen and (max-width: 992px) {
+    .home-container {
+        margin: 0 !important;
+        padding: 0 !important;
+        max-width: 100%;
+    }
+
+    .sliderImage {
+        height: 50vw;
+    }
+
+    .cardImg {
+        height: 180px;
+    }
 }

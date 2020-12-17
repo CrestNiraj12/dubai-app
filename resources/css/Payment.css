@@ -3,3 +3,32 @@
     top: 0 !important;
     left: 0 !important;
 }
+
+.submissionInfo {
+    font-size: 13px;
+    color: #038926;
+}
+
+.totalAmount {
+    text-align: right;
+    border-top: 1px solid #000;
+    padding-top: 10px;
+}
+
+@media screen and (max-width: 600px) {
+    .modal-body {
+        padding: 0;
+    }
+
+    .modal-body > .container {
+        padding: 0;
+    }
+
+    .submissionInfo {
+        margin-top: 20px;
+    }
+
+    .totalAmount {
+        padding-bottom: 10px;
+    }
+}

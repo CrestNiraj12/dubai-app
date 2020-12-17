@@ -1,24 +1,15 @@
 import React, { useState, useEffect } from "react";
-import {
-    Container,
-    Row,
-    Col,
-    Breadcrumb,
-    Button,
-    Card,
-    Table,
-    Spinner,
-    Form
-} from "react-bootstrap";
+import { Container, Row, Col, Breadcrumb, Button, Card } from "react-bootstrap";
 import Sticky from "react-sticky-el";
 import { useHistory } from "react-router-dom";
 import { AMOUNT } from "../../constants";
 import "../../../css/Course.css";
 import CouponForm from "../../components/CouponForm";
+import PageLoadSpinner from "../../components/PageLoadSpinner";
 
 const Course = ({ match }) => {
     var history = useHistory();
-    const [discountedPrice, setDiscountedPrice] = useState(null);
+    const [discountedPrice, setDiscountedPrice] = useState(0);
     const [validated, setValidated] = useState("");
     const [loading, setLoading] = useState(true);
     const [course, setCourse] = useState({
@@ -35,17 +26,17 @@ const Course = ({ match }) => {
     useEffect(() => {
         axios
             .get(`/api/courses/${match.params.id}`)
-            .then(res => setCourse(res.data))
+            .then(res => {
+                setCourse(res.data);
+                setLoading(false);
+            })
             .catch(err => console.log(err));
-        setLoading(false);
     }, []);
 
     return (
         <>
             {loading ? (
-                <Spinner animation="border" role="status">
-                    <span className="sr-only">Loading...</span>
-                </Spinner>
+                <PageLoadSpinner />
             ) : (
                 <Container className="course-content">
                     <Breadcrumb>
@@ -56,7 +47,7 @@ const Course = ({ match }) => {
                         </Breadcrumb.Item>
                     </Breadcrumb>
                     <Row>
-                        <Row style={{ margin: "30px 0" }}>
+                        <Row className="course-title">
                             <h1>{course.title}</h1>
                         </Row>
                         <Row>
@@ -78,11 +69,14 @@ const Course = ({ match }) => {
                                 <Row style={{ marginTop: "30px" }}>
                                     <h4>Course Details</h4>
                                 </Row>
-                                <Row
-                                    dangerouslySetInnerHTML={{
-                                        __html: course.description
-                                    }}
-                                ></Row>
+                                <Row>
+                                    <Col
+                                        style={{ padding: 0 }}
+                                        dangerouslySetInnerHTML={{
+                                            __html: course.description
+                                        }}
+                                    ></Col>
+                                </Row>
                             </Col>
                             <Col
                                 lg={4}

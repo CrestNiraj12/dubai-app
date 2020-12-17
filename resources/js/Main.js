@@ -7,6 +7,7 @@ import Enroll from "./containers/Enroll";
 import "../css/app.css";
 import SearchResult from "./containers/SearchResult";
 import axios from "axios";
+import PaymentRedirect from "./containers/PaymentRedirect";
 
 const App = () => {
     const [courses, setCourses] = useState([]);
@@ -32,6 +33,18 @@ const App = () => {
                     path="/search"
                     component={props => (
                         <SearchResult {...props} courses={courses} />
+                    )}
+                />
+                <Route
+                    path="/success"
+                    component={props => (
+                        <PaymentRedirect {...props} success={true} />
+                    )}
+                />
+                <Route
+                    path="/cancel"
+                    component={props => (
+                        <PaymentRedirect {...props} success={false} />
                     )}
                 />
                 <Route path="/course/:id" component={Course} exact />

@@ -5,23 +5,17 @@ import {
     Form,
     Row,
     Button,
-    Spinner,
-    Modal
+    Modal,
+    Spinner
 } from "react-bootstrap";
-import BscImage from "../../../images/bsc.jpg";
 import "../../../css/Enroll.css";
 import Payment from "../Payment";
+import axios from "axios";
+import PageLoadSpinner from "../../components/PageLoadSpinner";
+import { useHistory } from "react-router-dom";
 
-const Enroll = () => {
-    const course = {
-        id: 1,
-        title: "Bsc (Hons) Computing",
-        description:
-            "<p>The BSc (Hons) Computing Programme at The British College is run in partnership with Leeds Beckett University, UK. Students studying this course will gain highly sought-after skills in computer programming, database development, networking, website development, systems modelling, and computer security. This course is equivalent to BSc CSIT and BIT in Nepal.</p><p>These are vital skills for gaining entry into organisations which demand confident and technically equipped computing graduates.</p><p>Students will have the opportunity to work on real-world projects, focusing on specialist areas of their choice, including web technology, network and communications, database or software development.</p>",
-        image: BscImage,
-        yearly_fee: 12527.6,
-        uni_fee: 900
-    };
+const Enroll = ({ match }) => {
+    var history = useHistory();
     const initialData = {
         firstname: "",
         lastname: "",
@@ -31,16 +25,42 @@ const Enroll = () => {
         qualification: "",
         gpa: "",
         school: "",
-        address: ""
+        address: "",
+        coupon_applied: false,
+        coupon_id: null,
+        course_id: match.params.id
     };
+    const [buttonLoading, setButtonLoading] = useState(false);
     const [payment, setPayment] = useState(false);
     const [validated, setValidated] = useState(false);
     const [data, setData] = useState(initialData);
     const [invalidDatas, setInvalidDatas] = useState(initialData);
+    const [applications, setApplications] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [course, setCourse] = useState(null);
+    const [applicantId, setApplicantId] = useState(null);
 
     useEffect(() => {
-        setLoading(false);
+        axios
+            .get(`/api/courses/${match.params.id}`)
+            .then(res => {
+                setCourse(res.data);
+                const coupon = localStorage.getItem("couponId");
+                if (coupon)
+                    setData({
+                        ...data,
+                        coupon_applied: true,
+                        coupon_id: coupon
+                    });
+                setLoading(false);
+            })
+            .then(err => console.log(err));
+    }, []);
+
+    useEffect(() => {
+        axios.get(`/api/applicants`).then(res => {
+            setApplications(res.data);
+        });
     }, []);
 
     const handleChange = e =>
@@ -72,6 +92,13 @@ const Enroll = () => {
                 isValid = false;
                 errors["email"] = "Please enter valid email address.";
             }
+        }
+
+        const emails = applications.map(data => data.email);
+        if (emails.includes(data["email"])) {
+            isValid = false;
+            errors["email"] =
+                "We have already received an application from this email!";
         }
 
         if (!data["phone"]) {
@@ -107,6 +134,11 @@ const Enroll = () => {
             errors["gpa"] = "Please enter your GPA.";
         }
 
+        if (data["gpa"] > 4) {
+            isValid = false;
+            errors["gpa"] = "Max GPA is 4.00";
+        }
+
         if (!data["school"]) {
             isValid = false;
             errors["school"] = "Please enter your previous school/college.";
@@ -117,24 +149,52 @@ const Enroll = () => {
         return isValid;
     };
 
+    const getApplicantId = () => applicantId;
+
     const handleSubmit = e => {
         e.preventDefault();
+        setButtonLoading(true);
         if (validateData()) {
             setValidated(true);
-            setPayment(true);
-        } else setValidated(false);
+            axios
+                .post("/api/applicants", data)
+                .then(res => {
+                    setApplicantId(res.data.applicantId);
+                    setButtonLoading(false);
+                    setPayment(true);
+                })
+                .catch(err => {
+                    console.log(err.response);
+                    alert(
+                        "Error! There might be something wrong with your provided values. Please try again!"
+                    );
+                    setButtonLoading(false);
+                });
+        } else {
+            setValidated(false);
+            setButtonLoading(false);
+        }
+    };
+
+    const cancelPayment = e => {
+        const confirm = window.confirm(
+            "Are you sure you want to cancel the payment?"
+        );
+        if (confirm) {
+            localStorage.removeItem("couponId");
+            localStorage.removeItem("discount");
+            history.push("/");
+        }
     };
 
     return (
         <>
             {loading ? (
-                <Spinner animation="border" role="status">
-                    <span className="sr-only">Loading...</span>
-                </Spinner>
+                <PageLoadSpinner />
             ) : (
                 <>
                     <Fragment>
-                        <Modal show={payment} onHide={() => setPayment(false)}>
+                        <Modal show={payment} onHide={cancelPayment}>
                             <Modal.Header closeButton>
                                 <Modal.Title>
                                     Choose a payment method
@@ -142,7 +202,10 @@ const Enroll = () => {
                             </Modal.Header>
                             <Modal.Body>
                                 {" "}
-                                <Payment course={course} />
+                                <Payment
+                                    course={course}
+                                    getApplicantId={getApplicantId}
+                                />
                             </Modal.Body>
                         </Modal>
                     </Fragment>
@@ -270,7 +333,7 @@ const Enroll = () => {
                                     <Form.Group>
                                         <Form.Label>GPA</Form.Label>
                                         <Form.Control
-                                            type="text"
+                                            type="number"
                                             name="gpa"
                                             value={data.gpa}
                                             isInvalid={!!invalidDatas.gpa}
@@ -296,7 +359,22 @@ const Enroll = () => {
                                         </Form.Control.Feedback>
                                     </Form.Group>
                                     <Button onClick={handleSubmit}>
-                                        Submit
+                                        {buttonLoading && (
+                                            <>
+                                                <Spinner
+                                                    as="span"
+                                                    animation="border"
+                                                    size="sm"
+                                                    role="status"
+                                                    aria-hidden="true"
+                                                    className="buttonLoader"
+                                                />
+                                                <span className="sr-only">
+                                                    Loading...
+                                                </span>
+                                            </>
+                                        )}
+                                        {!buttonLoading && <span>Submit</span>}
                                     </Button>
                                 </Form>
                             </Col>

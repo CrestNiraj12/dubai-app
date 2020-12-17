@@ -13,9 +13,15 @@ class StripeController extends Controller
             'payment_method_types' => ['card'],
             'line_items' => [json_decode(str_replace("'",'"', $course), true)],
             'mode' => 'payment',
-            'success_url' => 'http://localhost:8080/success',
-            'cancel_url' => 'http://localhost:8080/'
+            'success_url' => "http://localhost:8080/success/?method=stripe&session_id={CHECKOUT_SESSION_ID}&applicant_id={$request->applicantId}&period={$request->period}",
+            'cancel_url' => 'http://localhost:8080/cancel'
         ]);
         return response()->json($session->id);
+    }
+
+    public function retrieveSession(Request $request) {
+        $sessionId = $request->sessionId;
+        $session = \Stripe\Checkout\Session::retrieve($sessionId);
+        return response()->json($session);
     }
 }
