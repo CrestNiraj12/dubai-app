@@ -33,7 +33,7 @@ class CouponDimmer extends BaseDimmer
                 'text' => 'View all coupons',
                 'link' => route('voyager.coupons.index'),
             ],
-            'image' => voyager_asset('images/widget-backgrounds/02.jpg'),
+            'image' => '/images/coupon.jpg',
         ]));
     }
 

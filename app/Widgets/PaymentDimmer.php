@@ -7,7 +7,7 @@ use Illuminate\Support\Str;
 use TCG\Voyager\Facades\Voyager;
 use TCG\Voyager\Widgets\BaseDimmer;
 
-class ApplicantDimmer extends BaseDimmer
+class PaymentDimmer extends BaseDimmer
 {
     /**
      * The configuration array.
@@ -22,18 +22,18 @@ class ApplicantDimmer extends BaseDimmer
      */
     public function run()
     {
-        $count = \App\Models\Applicant::count();
-        $string = 'Applicants';
+        $count = \App\Models\Payment::count();
+        $string = 'Payments';
 
         return view('voyager::dimmer', array_merge($this->config, [
-            'icon'   => 'voyager-documentation',
+            'icon'   => 'voyager-photo',
             'title'  => "{$count} {$string}",
             'text'   => __('voyager::dimmer.page_text', ['count' => $count, 'string' => Str::lower($string)]),
             'button' => [
-                'text' => 'View all applicants',
-                'link' => route('voyager.applicants.index'),
+                'text' => 'View all payments',
+                'link' => route('voyager.payments.index'),
             ],
-            'image' => '/images/apply.jpg',
+            'image' => voyager_asset('images/widget-backgrounds/02.jpg'),
         ]));
     }
 

@@ -146,8 +146,10 @@ return [
         'widgets' => [
             'TCG\\Voyager\\Widgets\\UserDimmer',
             'App\\Widgets\\CourseDimmer',
-            'App\\Widgets\\CouponDimmer',
+            'App\\Widgets\\PaymentDimmer',
             'App\\Widgets\\ApplicantDimmer',
+            'App\\Widgets\\CouponDimmer',
+
         ],
 
     ],
