@@ -1,5 +1,5 @@
-.enroll {
-    margin: 2% 30% 5% 30% !important;
+.enroll.container {
+    margin: 140px 30% !important;
     width: 40%;
 }
 
@@ -12,8 +12,8 @@
 }
 
 @media only screen and (max-width: 992px) {
-    .enroll {
-        margin: 5% 0 10% 0 !important;
+    .enroll.container {
+        margin: 5% !important;
         width: 100%;
     }
 

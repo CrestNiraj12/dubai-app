@@ -3,6 +3,7 @@ import { Col, Container, Row } from "react-bootstrap";
 import qs from "query-string";
 import CoursesCardLayout from "../../components/CoursesCardLayout";
 import PageLoadSpinner from "../../components/PageLoadSpinner";
+import { Link } from "react-router-dom";
 
 const SearchResult = ({ location, courses }) => {
     const [query, setQuery] = useState("");
@@ -29,13 +30,28 @@ const SearchResult = ({ location, courses }) => {
                 <Container>
                     <Row>
                         <Col>
-                            <p style={{ fontWeight: "bold" }}>
+                            <p
+                                style={{
+                                    fontWeight: "bold",
+                                    marginTop: "5%",
+                                    fontSize: "18px"
+                                }}
+                            >
                                 Search Results for '{query.q}'
                             </p>
                         </Col>
                     </Row>
                     <Row>
-                        <CoursesCardLayout courses={result} />
+                        {result.length > 0 ? (
+                            <CoursesCardLayout courses={result} />
+                        ) : (
+                            <h1 style={{ padding: "15px" }}>
+                                No courses found!{" "}
+                                <small>
+                                    <Link to="/">Go Home</Link>
+                                </small>
+                            </h1>
+                        )}
                     </Row>
                 </Container>
             )}

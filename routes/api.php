@@ -7,6 +7,7 @@ use App\Http\Controllers\CouponController;
 use App\Http\Controllers\StripeController;
 use App\Http\Controllers\ApplicantController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\CarouselController;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,6 +27,7 @@ Route::resource('courses', CourseController::class);
 Route::resource('coupons', CouponController::class);
 Route::resource('applicants', ApplicantController::class);
 Route::resource('payments', PaymentController::class);
+Route::resource('images', CarouselController::class);
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();

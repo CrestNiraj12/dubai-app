@@ -1,15 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Spinner } from "react-bootstrap";
 import { CheckCircle, XSquareFill } from "react-bootstrap-icons";
-import { Link, Redirect, useLocation } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import "../../../css/RedirectLoader.css";
+import qs from "query-string";
 
-const useQuery = () => {
-    return new URLSearchParams(useLocation().search);
-};
-
-const PaymentRedirect = ({ success }) => {
-    const query = useQuery();
+const PaymentRedirect = ({ location, success }) => {
+    const query = qs.parse(location.search);
     const [redirect, setRedirect] = useState(false);
 
     const finalTask = () => {
@@ -19,54 +16,46 @@ const PaymentRedirect = ({ success }) => {
     };
 
     useEffect(() => {
-        let isMounted = true;
+        var mounted = true;
         if (success) {
-            const method = query.get("method").toLowerCase();
-            const applicant_id = query.get("applicant_id");
-            if (method === "stripe")
-                axios
-                    .put(`/api/applicants/${applicant_id}`, {
-                        payment_made: true
-                    })
-                    .then(() => {
-                        axios
-                            .post("/api/stripe/session", {
-                                sessionId: query.get("session_id")
+            const method = query.method.toLowerCase();
+            if (method === "stripe") {
+                const applicant_id = query.applicant_id;
+                if (mounted)
+                    axios
+                        .put(`/api/applicants/${applicant_id}`, {
+                            payment_made: true
+                        })
+                        .then(() =>
+                            axios.post("/api/stripe/session", {
+                                sessionId: query.session_id
                             })
-                            .then(res => {
-                                const details = res.data;
-                                const data = {
-                                    method,
-                                    amount: details.amount_total / 100,
-                                    applicant_id,
-                                    period: query.get("period")
-                                };
-                                axios
-                                    .post("/api/payments/", data)
-                                    .then(() => {
-                                        if (isMounted) finalTask();
-                                    })
-                                    .catch(
-                                        err => "Error while creating payments!"
-                                    );
-                            })
-                            .catch(err =>
-                                console.log("Error while retrieving session!")
-                            );
-                    })
-                    .catch(err =>
-                        console.log("Error while updating applicant!")
-                    );
-        } else {
-            if (isMounted) finalTask();
-        }
+                        )
+                        .then(res => {
+                            const details = res.data;
+                            const data = {
+                                method,
+                                amount: details.amount_total / 100,
+                                applicant_id,
+                                period: query.period
+                            };
+
+                            return axios.post("/api/payments/", data);
+                        })
+                        .then(() => {
+                            console.log("Payment successful!");
+                            finalTask();
+                        })
+                        .catch(err => console.log(err));
+            }
+        } else finalTask();
         return () => {
-            isMounted = false;
+            mounted = false;
         };
-    }, [query]);
+    }, []);
 
     return redirect ? (
-        <Redirect to="/home" />
+        <Redirect to="/" />
     ) : (
         <div style={{ textAlign: "center", margin: "250px 0" }}>
             <p

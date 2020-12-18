@@ -25,6 +25,7 @@
     "dependencies": {
         "@paypal/react-paypal-js": "^3.0.3",
         "@stripe/stripe-js": "^1.11.0",
+        "@y2nk4/currency-converter": "^1.0.2",
         "axios": "^0.19.2",
         "bootstrap": "^4.5.3",
         "query-string": "^6.13.7",

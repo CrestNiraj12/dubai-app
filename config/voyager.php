@@ -149,7 +149,6 @@ return [
             'App\\Widgets\\PaymentDimmer',
             'App\\Widgets\\ApplicantDimmer',
             'App\\Widgets\\CouponDimmer',
-
         ],
 
     ],

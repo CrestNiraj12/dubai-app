@@ -16,6 +16,8 @@ import {
 } from "../../constants";
 import "../../../css/Payment.css";
 import PageLoadSpinner from "../../components/PageLoadSpinner";
+import CurrencyConverter from "@y2nk4/currency-converter";
+import axios from "axios";
 
 const stripePromise = loadStripe(
     "pk_test_51HrrlNARkfToiPFSupHqiJpGnsej3pPYyODpRU5x651HuosD4y4b9fufVkDzfKf0BQNbKgxwAKZWMiFWxrnIgaRO000iRAqmx5"
@@ -24,15 +26,17 @@ const stripePromise = loadStripe(
 const PAYPAL_CLIENT_ID =
     "AU7wEngzj7X-pWbhKsvfGbT4AaLZ0zEyoTL8XPiv01ujkCHwdZdHelg-TrCA-NjYkWz2VwToxE1DyPWV";
 
-const Payment = ({ course, getApplicantId }) => {
+const Payment = ({ course, applicantId }) => {
     var history = useHistory();
     const [coupon, setCoupon] = useState(null);
     const [couponApplied, setCouponApplied] = useState(false);
     const [selected, setSelected] = useState(null);
     const [payDiscount, setPayDiscount] = useState(null);
     const [finalAmount, setFinalAmount] = useState(null);
+    const [finalAmountToUSD, setFinalAmountToUSD] = useState(null);
     const [buttonLoading, setButtonLoading] = useState(false);
     const [loading, setLoading] = useState(true);
+    const converter = new CurrencyConverter("9d5c62482fe6c1519c50");
 
     const calculateFinalAmount = period => {
         var amount;
@@ -58,6 +62,9 @@ const Payment = ({ course, getApplicantId }) => {
         }
         setPayDiscount(discountCourse);
         setFinalAmount(amount);
+        converter.convert("AED", "USD", amount).then(res => {
+            setFinalAmountToUSD(Number(res.toFixed(2)));
+        });
     };
 
     useEffect(() => {
@@ -85,14 +92,45 @@ const Payment = ({ course, getApplicantId }) => {
 
     const onApprove = (data, actions) => {
         actions.order.capture().then(() => {
-            history.push("/success");
+            axios
+                .put(`/api/applicants/${applicantId}`, {
+                    payment_made: true
+                })
+                .then(() => {
+                    const details = {
+                        method: "paypal",
+                        amount: finalAmountToUSD,
+                        currency: "USD",
+                        applicant_id: applicantId,
+                        period: selected
+                    };
+                    axios.post("/api/payments/", details);
+                })
+                .then(() => {
+                    history.push(
+                        `/success/?order_id=${data.orderID}&method=paypal`
+                    );
+                })
+                .catch(err => "Error while creating payments!");
         });
     };
 
-    const onCancel = (data, actions) =>
-        actions.order.capture().then(() => {
-            history.push("/cancel");
+    const onCancel = data => {
+        history.push("/cancel");
+    };
+
+    const createOrder = (data, actions) => {
+        return actions.order.create({
+            purchase_units: [
+                {
+                    amount: {
+                        currency: "USD",
+                        value: finalAmountToUSD
+                    }
+                }
+            ]
         });
+    };
 
     const payWithStripe = async e => {
         e.preventDefault();
@@ -111,7 +149,7 @@ const Payment = ({ course, getApplicantId }) => {
 
         const response = await axios.post("/api/stripe/pay", {
             course: courseItem,
-            applicantId: getApplicantId(),
+            applicantId,
             period: selected
         });
 
@@ -122,23 +160,13 @@ const Payment = ({ course, getApplicantId }) => {
         if (result.error) console.log(result.error);
     };
 
-    const createOrder = (data, actions) => {
-        return actions.order.create({
-            purchase_units: [
-                {
-                    amount: {
-                        value: finalAmount
-                    }
-                }
-            ]
-        });
-    };
-
     const handleSelected = e => {
         const period = e.target.value;
         setSelected(period);
         calculateFinalAmount(period);
     };
+
+    const getFinalAmountToUSD = () => finalAmountToUSD;
 
     return (
         <>
@@ -297,10 +325,6 @@ const Payment = ({ course, getApplicantId }) => {
                                     <Button
                                         className="payment"
                                         onClick={payWithStripe}
-                                        style={{
-                                            width: "100%",
-                                            marginBottom: "12px"
-                                        }}
                                     >
                                         {buttonLoading && (
                                             <>
@@ -327,13 +351,17 @@ const Payment = ({ course, getApplicantId }) => {
                                 <Col>
                                     <PayPalScriptProvider
                                         options={{
-                                            "client-id": PAYPAL_CLIENT_ID
+                                            "client-id": PAYPAL_CLIENT_ID,
+                                            currency: "USD"
                                         }}
                                     >
                                         <PaypalButtonsCustomized
                                             createOrder={createOrder}
                                             onApprove={onApprove}
                                             onCancel={onCancel}
+                                            finalAmountToUSD={
+                                                getFinalAmountToUSD
+                                            }
                                         />
                                     </PayPalScriptProvider>
                                 </Col>
@@ -346,7 +374,12 @@ const Payment = ({ course, getApplicantId }) => {
     );
 };
 
-const PaypalButtonsCustomized = ({ createOrder, onApprove, onCancel }) => {
+const PaypalButtonsCustomized = ({
+    createOrder,
+    onApprove,
+    onCancel,
+    finalAmountToUSD
+}) => {
     const [{ isPending }, dispatch] = usePayPalScriptReducer();
 
     useEffect(() => {
@@ -378,7 +411,9 @@ const PaypalButtonsCustomized = ({ createOrder, onApprove, onCancel }) => {
                 }}
                 createOrder={(data, actions) => createOrder(data, actions)}
                 onApprove={(data, actions) => onApprove(data, actions)}
-                onCancel={(data, actions) => onCancel(data, actions)}
+                onCancel={data => onCancel(data)}
+                onError={err => console.log(err)}
+                forceReRender={finalAmountToUSD()}
             />
         </>
     );

@@ -28,9 +28,21 @@ button {
     margin: 10px 25px;
 }
 
+.row {
+    width: 100%;
+}
+
+@media screen and (min-width: 992px) {
+    .container {
+        margin: 140px 10% !important;
+        padding: 0 !important;
+        max-width: 80%;
+    }
+}
+
 @media screen and (max-width: 600px) {
     .jumbotron {
-        margin: 50px 25px;
+        margin: 50px 0;
         padding: 1rem;
     }
 
@@ -42,14 +54,29 @@ button {
     .jumbotron p {
         padding: 0 20px;
     }
+
+    .container {
+        margin: 5% !important;
+        padding: 0 !important;
+        max-width: 90%;
+    }
 }
 
-.row {
-    width: 100%;
+.btn-primary {
+    background-color: #1f3860;
+    border-color: #1f3860;
 }
 
-.container {
-    margin: 2% 10% !important;
-    padding: 0 !important;
-    max-width: 80%;
+.form-control,
+.btn-primary,
+.card,
+.jumbotron,
+.modal-content {
+    border-radius: 0;
+}
+
+.modal-body > .container {
+    margin: 0 !important;
+    padding: 0 15px !important;
+    max-width: 100% !important;
 }

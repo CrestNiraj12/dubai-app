@@ -11,10 +11,11 @@ import {
 import { Search } from "react-bootstrap-icons";
 import { useHistory } from "react-router-dom";
 import "../../../css/Navbar.css";
+import Logo from "../../../images/TWI Logo.png";
 
 const NavBar = ({ courses }) => {
     var history = useHistory();
-    const [active, setActive] = useState("/");
+    const [active, setActive] = useState(null);
     const [query, setQuery] = useState("");
     const [searchResult, setSearchResults] = useState([]);
 
@@ -36,14 +37,14 @@ const NavBar = ({ courses }) => {
     };
 
     return (
-        <Navbar
-            className="navigation"
-            bg="dark"
-            variant="dark"
-            collapseOnSelect
-            expand="lg"
-        >
-            <Navbar.Brand href="/">Dubai App</Navbar.Brand>
+        <Navbar className="navigation" collapseOnSelect expand="lg">
+            <Navbar.Brand href="/">
+                <img
+                    src={Logo}
+                    className="d-inline-block align-top nav-logo"
+                    alt="The Woolwich Institute"
+                />
+            </Navbar.Brand>
             <Navbar.Toggle aria-controls="responsive-navbar-nav" />
             <Navbar.Collapse id="responsive-navbar-nav">
                 <Nav
@@ -52,22 +53,28 @@ const NavBar = ({ courses }) => {
                     onSelect={selectedKey => setActive(selectedKey)}
                 >
                     <Nav.Link href="/" className="navItem">
-                        Home
+                        HOME
                     </Nav.Link>
 
                     <NavDropdown
                         className="navItem"
-                        title="Courses"
+                        title="COURSES"
                         id="basic-nav-dropdown"
                     >
-                        {courses.map(({ id, title }, index) => (
-                            <NavDropdown.Item
-                                key={index}
-                                href={`/course/${id}`}
-                            >
-                                {title}
+                        {courses.length > 0 ? (
+                            courses.map(({ id, title }, index) => (
+                                <NavDropdown.Item
+                                    key={index}
+                                    href={`/course/${id}`}
+                                >
+                                    {title}
+                                </NavDropdown.Item>
+                            ))
+                        ) : (
+                            <NavDropdown.Item disabled>
+                                No courses available!
                             </NavDropdown.Item>
-                        ))}
+                        )}
                     </NavDropdown>
                 </Nav>
 
@@ -84,19 +91,19 @@ const NavBar = ({ courses }) => {
                             onChange={handleSearch}
                             className="mr-sm-2"
                             style={{
-                                height: "30px"
+                                height: "40px"
                             }}
                         />
                         <Button
                             className="searchButton"
                             onClick={handleSearchAll}
-                            style={{ height: "30px" }}
+                            style={{ height: "40px" }}
                         >
                             <Search />
                         </Button>
                         <Dropdown.Menu
                             show={!!query}
-                            style={{ maxWidth: "185px" }}
+                            style={{ width: "185px" }}
                         >
                             {searchResult.length > 0 ? (
                                 searchResult.map(({ id, title }, index) => (

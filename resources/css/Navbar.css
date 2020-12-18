@@ -1,6 +1,32 @@
 .navItem {
     padding-left: 25px !important;
     padding-right: 0 !important;
+    color: #1f3860 !important;
+    font-size: 16px;
+    font-family: "Roboto Slab" !important;
+}
+
+.nav-logo {
+    width: 180px;
+    filter: drop-shadow(1px 1px 0px #ddd);
+}
+
+.nav-link.active {
+    text-decoration: underline;
+}
+
+.navbar-nav {
+    padding-left: 20px;
+}
+
+.dropdown-menu {
+    border-radius: 0;
+    border: none;
+}
+
+.navItem > .nav-link {
+    font-family: "Roboto Slab" !important;
+    color: #1f3860 !important;
 }
 
 .navigation button,
@@ -13,24 +39,52 @@
     margin-right: 0 !important;
 }
 
-.navigation svg {
-    vertical-align: initial;
-}
-
 .navigation .searchButton {
-    border: 1px solid #3490dc;
+    border: 1px solid #1f3860;
+    background-color: #1f3860;
 }
 
 @media screen and (min-width: 992px) {
     .navigation {
         padding: 15px 10%;
+        position: absolute;
+        z-index: 100;
+        top: 0;
+        width: 100%;
+    }
+
+    .navigation input {
+        width: 200px !important;
     }
 }
 
 @media screen and (max-width: 992px) {
+    .navbar {
+        padding: 10px 5%;
+        background: #8ed0ff;
+    }
+
+    .navbar-nav {
+        padding: 0;
+    }
+
     .navigation .form-group {
-        width: 90%;
-        margin: 5%;
+        width: 100% !important;
+        padding: 5% 25px;
         display: flex;
+    }
+
+    .navigation .form-group input {
+        width: 80%;
+    }
+
+    .nav-logo {
+        width: 120px;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .nav-logo {
+        width: 100px;
     }
 }

@@ -17,6 +17,7 @@ class CreatePaymentsTable extends Migration
             $table->id();
             $table->string('method');
             $table->decimal('amount');
+            $table->string('currency')->default('د.إ');
             $table->string('period');
             $table->timestamps();
         });

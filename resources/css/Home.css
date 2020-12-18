@@ -1,10 +1,14 @@
+.home-container.container {
+    margin-top: 50px !important;
+}
+
 .row {
     margin-left: 0 !important;
     margin-right: 0 !important;
 }
 
 .sliderImage {
-    height: 91vh;
+    height: 100vh;
     object-fit: cover;
     width: 100%;
 }

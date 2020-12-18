@@ -149,8 +149,6 @@ const Enroll = ({ match }) => {
         return isValid;
     };
 
-    const getApplicantId = () => applicantId;
-
     const handleSubmit = e => {
         e.preventDefault();
         setButtonLoading(true);
@@ -204,7 +202,7 @@ const Enroll = ({ match }) => {
                                 {" "}
                                 <Payment
                                     course={course}
-                                    getApplicantId={getApplicantId}
+                                    applicantId={applicantId}
                                 />
                             </Modal.Body>
                         </Modal>
