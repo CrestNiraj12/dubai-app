@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Col, Container, Row } from "react-bootstrap";
 import qs from "query-string";
-import CoursesCardLayout from "../../components/CoursesCardLayout";
+import CardLayout from "../../components/CardLayout";
 import PageLoadSpinner from "../../components/PageLoadSpinner";
 import { Link } from "react-router-dom";
 
@@ -43,7 +43,7 @@ const SearchResult = ({ location, courses }) => {
                     </Row>
                     <Row>
                         {result.length > 0 ? (
-                            <CoursesCardLayout courses={result} />
+                            <CardLayout data={result} />
                         ) : (
                             <h1 style={{ padding: "15px" }}>
                                 No courses found!{" "}

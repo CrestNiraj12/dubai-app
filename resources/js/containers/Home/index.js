@@ -3,7 +3,7 @@ import { Container, Jumbotron, Row } from "react-bootstrap";
 import "../../../css/Home.css";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import CoursesCardLayout from "../../components/CoursesCardLayout";
+import CardLayout from "../../components/CardLayout";
 import PageLoadSpinner from "../../components/PageLoadSpinner";
 import CustomCarousel from "../../components/CustomCarousel";
 
@@ -12,7 +12,7 @@ const Home = ({ courses }) => {
 
     useEffect(() => {
         setLoading(false);
-    });
+    }, []);
 
     return (
         <>
@@ -32,7 +32,7 @@ const Home = ({ courses }) => {
                         </Jumbotron>
 
                         <Row>
-                            <CoursesCardLayout courses={courses} />
+                            <CardLayout data={courses} parent="course" />
                         </Row>
                     </Container>
                 </Container>

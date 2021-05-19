@@ -76,6 +76,12 @@ const NavBar = ({ courses }) => {
                             </NavDropdown.Item>
                         )}
                     </NavDropdown>
+                    <Nav.Link href="/blogs" className="navItem">
+                        BLOG
+                    </Nav.Link>
+                    <Nav.Link href="/news" className="navItem">
+                        NEWS
+                    </Nav.Link>
                 </Nav>
 
                 <Form

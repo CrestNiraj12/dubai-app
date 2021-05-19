@@ -8,6 +8,10 @@ import "../css/app.css";
 import SearchResult from "./containers/SearchResult";
 import axios from "axios";
 import PaymentRedirect from "./containers/PaymentRedirect";
+import News from "./containers/News";
+import Blogs from "./containers/Blogs";
+import Blog from "./containers/Blog";
+import NewsPost from "./containers/NewsPost";
 
 const App = () => {
     const [courses, setCourses] = useState([]);
@@ -29,6 +33,18 @@ const App = () => {
                     component={props => <Home {...props} courses={courses} />}
                     exact
                 />
+                <Route
+                    path="/blogs"
+                    component={props => <Blogs {...props} />}
+                    exact
+                />
+                <Route
+                    path="/news"
+                    component={props => <News {...props} />}
+                    exact
+                />
+                <Route path="/blogs/:id" component={Blog} exact />
+                <Route path="/news/:id" component={NewsPost} exact />
                 <Route
                     path="/search"
                     component={props => (

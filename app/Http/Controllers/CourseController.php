@@ -19,7 +19,7 @@ class CourseController extends Controller
             'description'  => 'required',
             'facts'        => 'required',
             'requirements' => 'required',
-            'image'        => 'required',
+            'thumbnail'        => 'required',
             'yearly_fee'   => 'required',
             'uni_fee'      => 'required'
         ]);

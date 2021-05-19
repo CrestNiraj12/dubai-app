@@ -1,0 +1,55 @@
+.page-container,
+.page-content {
+    margin: 150px 8% !important;
+    max-width: 100% !important;
+    width: auto !important;
+}
+
+.page-thumbnail {
+    height: 500px;
+    object-fit: cover;
+}
+
+.cardTopSpacing {
+    margin-top: 20px;
+}
+
+.breadcrumb {
+    margin: 20px 0;
+}
+
+.page-content {
+    margin-bottom: 10%;
+}
+
+@media only screen and (min-width: 992px) {
+    .page-title {
+        margin: 30px 0;
+    }
+}
+
+@media only screen and (max-width: 1200px) {
+    .page-thumbnail {
+        height: 400px;
+    }
+}
+
+@media only screen and (max-width: 992px) {
+    .page-content .col-md-12 {
+        padding: 0;
+    }
+
+    .page-title {
+        margin: 15px 0;
+    }
+
+    .page-thumbnail {
+        height: 200px;
+    }
+
+    .page-container {
+        margin: 0 !important;
+        padding: 0 !important;
+        max-width: 100%;
+    }
+}

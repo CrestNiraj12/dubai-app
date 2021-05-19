@@ -5,6 +5,39 @@
     margin-top: 20px;
 }
 
+.contentCard {
+    cursor: pointer;
+}
+
+.contentCard > .cardBody {
+    background: #fff;
+    transition: transform 0.25s ease-out;
+}
+
+.contentCard:hover > .cardImg {
+    filter: brightness(0.8);
+    transition: filter 0.25s ease-out;
+}
+
+.contentCard:hover > .cardBody {
+    transform: translateY(-30px);
+}
+
+.cardImg {
+    height: 250px;
+    object-fit: cover;
+}
+
+.actionBtn {
+    margin-top: 20px;
+}
+
+@media screen and (max-width: 992px) {
+    .cardImg {
+        height: 180px;
+    }
+}
+
 @media screen and (max-width: 600px) {
     .cardLayout > div[class*="col-"],
     .col {

@@ -46,7 +46,8 @@ const CouponForm = ({ setDiscountedPrice, setValidated, course }) => {
                 validCoupon.type === PERCENTAGE
                     ? (validCoupon.discount / 100) * period_fee
                     : validCoupon.discount;
-
+            console.log(validCoupon.discount_period);
+            console.log(discount_amount);
             setDiscountedPrice(course.yearly_fee * 4 - discount_amount);
             localStorage.setItem("couponId", validCoupon.id);
             localStorage.setItem("discount", discount_amount);

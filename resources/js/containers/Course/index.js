@@ -17,7 +17,7 @@ const Course = ({ match }) => {
         title: "",
         description: "",
         facts: "",
-        image: "",
+        thumbnail: "",
         requirements: "",
         uni_fee: "",
         yearly_fee: ""
@@ -43,7 +43,7 @@ const Course = ({ match }) => {
                         <Breadcrumb.Item href="/">Home</Breadcrumb.Item>
                         <Breadcrumb.Item active>Courses</Breadcrumb.Item>
                         <Breadcrumb.Item active>
-                            Bsc (Hons) Computing
+                            {course ? course.title : ""}
                         </Breadcrumb.Item>
                     </Breadcrumb>
                     <Row>
@@ -60,7 +60,7 @@ const Course = ({ match }) => {
                             >
                                 <Row>
                                     <img
-                                        src={`\\storage\\${course.image}`}
+                                        src={`\\storage\\${course.thumbnail}`}
                                         width={"100%"}
                                         className="thumbnail-course"
                                         alt={course.title}
