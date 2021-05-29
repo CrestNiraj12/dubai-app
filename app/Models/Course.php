@@ -16,6 +16,11 @@ class Course extends Model
         'requirements',
         'image',
         'yearly_fee',
-        'uni_fee'
+        'uni_fee',
+        'keywords',
+        'meta_description',
+        'meta_title',
+        'og_description',
+        'twitter_description'
     ];
 }

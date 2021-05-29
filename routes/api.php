@@ -9,7 +9,10 @@ use App\Http\Controllers\ApplicantController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\CarouselController;
+use App\Http\Controllers\FilesController;
+use App\Http\Controllers\NavigationController;
 use App\Http\Controllers\NewsController;
+use App\Http\Controllers\PageController;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,6 +35,11 @@ Route::resource('payments', PaymentController::class);
 Route::resource('images', CarouselController::class);
 Route::resource('blogs', BlogController::class);
 Route::resource('news', NewsController::class);
+Route::get('navigation', [NavigationController::class, 'index']);
+Route::get('files', [FilesController::class, 'getAllFiles']);
+Route::get('files/{id}', [FilesController::class, 'getFile']);
+Route::get('pages', [PageController::class, 'getAllPages']);
+Route::get('pages/{slug}', [PageController::class, 'getPageBySlug']);
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();

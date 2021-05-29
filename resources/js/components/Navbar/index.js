@@ -1,4 +1,5 @@
-import React from "react";
+import axios from "axios";
+import React, { useEffect } from "react";
 import { useState } from "react";
 import {
     Navbar,
@@ -15,9 +16,17 @@ import Logo from "../../../images/TWI Logo.png";
 
 const NavBar = ({ courses }) => {
     var history = useHistory();
+    const [navigation, setNavigation] = useState([]);
     const [active, setActive] = useState(null);
     const [query, setQuery] = useState("");
     const [searchResult, setSearchResults] = useState([]);
+
+    useEffect(() => {
+        axios
+            .get("/api/navigation")
+            .then(res => setNavigation(res.data))
+            .catch(err => console.log(err));
+    }, []);
 
     const handleSearch = e => {
         const q = e.target.value;
@@ -76,12 +85,26 @@ const NavBar = ({ courses }) => {
                             </NavDropdown.Item>
                         )}
                     </NavDropdown>
-                    <Nav.Link href="/blogs" className="navItem">
-                        BLOG
-                    </Nav.Link>
-                    <Nav.Link href="/news" className="navItem">
-                        NEWS
-                    </Nav.Link>
+                    {navigation.map(({ title, children }, index) => (
+                        <NavDropdown
+                            key={index}
+                            className="navItem"
+                            title={title}
+                            id="basic-nav-dropdown"
+                        >
+                            {children.length > 0 ? (
+                                children.map(({ title: childTitle, url }) => (
+                                    <NavDropdown.Item key={index} href={url}>
+                                        {childTitle}
+                                    </NavDropdown.Item>
+                                ))
+                            ) : (
+                                <NavDropdown.Item disabled>
+                                    Nothing here!
+                                </NavDropdown.Item>
+                            )}
+                        </NavDropdown>
+                    ))}
                 </Nav>
 
                 <Form

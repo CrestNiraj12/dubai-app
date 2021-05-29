@@ -1,0 +1,19 @@
+.custom-page-container {
+    margin: 150px 0 !important;
+    padding: 0 !important;
+    max-width: 100% !important;
+    width: auto !important;
+}
+
+.custom-page-content {
+    margin: 30px 8% !important;
+    padding: 0 !important;
+}
+
+@media only screen and (max-width: 992px) {
+    .custom-page-content {
+        margin: 30px 0 !important;
+        padding: 0 !important;
+        max-width: 100%;
+    }
+}

@@ -20,7 +20,7 @@ li,
 a,
 label,
 button {
-    font-family: "Quicksand", sans-serif !important;
+    font-family: "Quicksand", sans-serif;
     overflow-wrap: anywhere;
 }
 

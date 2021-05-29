@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\BlogController;
+use App\Http\Controllers\NewsController;
+use App\Http\Controllers\PageController;
 use Illuminate\Support\Facades\Route;
 use TCG\Voyager\Facades\Voyager;
 
@@ -17,6 +20,12 @@ use TCG\Voyager\Facades\Voyager;
 Route::group(['prefix' => 'admin'], function () {
     Voyager::routes();
 });
+
+
+Route::get('/courses/{path}', [CourseController::class, 'getCourseView']);
+Route::get('/blog/{path}', [BlogController::class, 'getBlogView']);
+Route::get('/news/{path}', [NewsController::class, 'getNewsView']);
+Route::get('/page/{path}', [PageController::class, 'getPageView']);
 
 Route::get( '/{path?}', function() {
     return view( 'welcome' );

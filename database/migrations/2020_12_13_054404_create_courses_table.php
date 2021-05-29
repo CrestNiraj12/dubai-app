@@ -22,6 +22,11 @@ class CreateCoursesTable extends Migration
             $table->string('thumbnail');
             $table->decimal('yearly_fee', 10, 2);
             $table->decimal('uni_fee', 10, 2);
+            $table->longText('keywords')->nullable();
+            $table->longText('meta_description')->nullable();
+            $table->string('meta_title')->nullable();
+            $table->longText('og_description')->nullable();
+            $table->longText('twitter_description')->nullable();
             $table->timestamps();
         });
     }

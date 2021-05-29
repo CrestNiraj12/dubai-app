@@ -12,6 +12,8 @@ import News from "./containers/News";
 import Blogs from "./containers/Blogs";
 import Blog from "./containers/Blog";
 import NewsPost from "./containers/NewsPost";
+import Downloads from "./containers/Downloads";
+import Page from "./containers/Page";
 
 const App = () => {
     const [courses, setCourses] = useState([]);
@@ -43,8 +45,14 @@ const App = () => {
                     component={props => <News {...props} />}
                     exact
                 />
+                <Route
+                    path="/downloads"
+                    component={props => <Downloads {...props} />}
+                    exact
+                />
                 <Route path="/blogs/:id" component={Blog} exact />
                 <Route path="/news/:id" component={NewsPost} exact />
+                <Route path="/page/:slug" component={Page} exact />
                 <Route
                     path="/search"
                     component={props => (

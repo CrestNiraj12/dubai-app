@@ -17,6 +17,9 @@ class News extends Model
         "featured",
         "tags",
         'keywords',
-        'meta_description'
+        'meta_description',
+        'meta_title',
+        'og_description',
+        'twitter_description'
     ];
 }

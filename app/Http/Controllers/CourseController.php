@@ -43,4 +43,18 @@ class CourseController extends Controller
         return response()->json(['message'=> 'Course deleted successfully!']);
     }
 
+    public function getCourseView($id) {
+        $course = $this->show($id);
+        return view('welcome', [
+            'title' => $course['title'], 
+            'description' => $course['description'], 
+            'image_path' => $course['thumbnail'], 
+            'meta_title' => $course['meta_title'],
+            'keywords' => $course['keywords'],
+            'meta_description' => $course['meta_description'],
+            'og_description' => $course['og_description'],
+            'twitter_description' => $course['twitter_description'],
+        ]);
+    }
+
 }

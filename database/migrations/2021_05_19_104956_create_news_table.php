@@ -23,6 +23,9 @@ class CreateNewsTable extends Migration
             $table->boolean('featured');
             $table->longText('keywords')->nullable();
             $table->longText('meta_description')->nullable();
+            $table->string('meta_title')->nullable();
+            $table->longText('og_description')->nullable();
+            $table->longText('twitter_description')->nullable();
             $table->timestamps();
         });
     }
