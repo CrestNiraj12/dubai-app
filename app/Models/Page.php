@@ -11,14 +11,11 @@ class Page extends Model
 
     protected $fillable = [
         'title',
-        'description',
         'slug',
-        'image',
+        'hasBreadcrumb',
         'content',
         'keywords',
         'meta_description',
         'meta_title',
-        'og_description',
-        'twitter_description'
     ];
 }

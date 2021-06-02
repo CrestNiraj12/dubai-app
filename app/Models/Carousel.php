@@ -10,7 +10,11 @@ class Carousel extends Model
     use HasFactory;
 
     protected $fillable = [
-        'image'
+        'image',
+        'heading',
+        'description',
+        'buttonText',
+        'link'
     ];
 }
 

@@ -11,12 +11,10 @@ class Course extends Model
 
     protected $fillable = [
         'title',
-        'description',
-        'facts',
-        'requirements',
-        'image',
-        'yearly_fee',
-        'uni_fee',
+        'slug',
+        'content',
+        'fees',
+        'thumbnail',
         'keywords',
         'meta_description',
         'meta_title',

@@ -25,5 +25,8 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         Stripe::setApiKey(env('STRIPE_SERVER_KEY'));
+        view()->composer('partials._navbar', function ($view) {
+            view()->share('navigations', menu('Navbar'));
+        });
     }
 }
