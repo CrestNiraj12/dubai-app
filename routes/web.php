@@ -23,9 +23,7 @@ Route::group(['prefix' => 'admin'], function () {
 });
 
 
-Route::get('/', function () {
-    return view('/pages/landing-page');
-});
+Route::get('/', [PagesController::class, 'getLandingPage']);
 
 
 
