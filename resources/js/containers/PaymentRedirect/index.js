@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Spinner } from "react-bootstrap";
 import { CheckCircle, XSquareFill } from "react-bootstrap-icons";
-import { Link, Redirect } from "react-router-dom";
+import { Link } from "react-router-dom";
 import "../../../css/RedirectLoader.css";
 import qs from "query-string";
 
@@ -9,10 +8,13 @@ const PaymentRedirect = ({ location, success }) => {
     const query = qs.parse(location.search);
     const [redirect, setRedirect] = useState(false);
 
+    useEffect(() => {
+        if (redirect) window.location.href = "/";
+    }, [redirect]);
+
     const finalTask = () => {
-        localStorage.removeItem("couponId");
-        localStorage.removeItem("discount");
-        setTimeout(() => setRedirect(true), 2000);
+        localStorage.clear();
+        setTimeout(() => setRedirect(true), 0);
     };
 
     useEffect(() => {
@@ -23,40 +25,41 @@ const PaymentRedirect = ({ location, success }) => {
                 const applicant_id = query.applicant_id;
                 if (mounted)
                     axios
-                        .put(`/api/applicants/${applicant_id}`, {
-                            payment_made: true
+                        .post("/api/stripe/session", {
+                            sessionId: query.session_id
                         })
-                        .then(() =>
-                            axios.post("/api/stripe/session", {
-                                sessionId: query.session_id
-                            })
-                        )
-                        .then(res => {
+                        .then(async res => {
                             const details = res.data;
                             const data = {
                                 method,
                                 amount: details.amount_total / 100,
-                                applicant_id,
-                                period: query.period
+                                applicant_id
                             };
 
-                            return axios.post("/api/payments/", data);
+                            return await axios.post("/api/payments", data);
                         })
+                        .then(
+                            async () =>
+                                await axios.put(
+                                    `/api/applicants/${applicant_id}`,
+                                    {
+                                        payment_made: true
+                                    }
+                                )
+                        )
                         .then(() => {
                             console.log("Payment successful!");
                             finalTask();
                         })
-                        .catch(err => console.log(err));
-            }
+                        .catch(err => console.log(err.response));
+            } else finalTask();
         } else finalTask();
         return () => {
             mounted = false;
         };
     }, []);
 
-    return redirect ? (
-        <Redirect to="/" />
-    ) : (
+    return (
         <div style={{ textAlign: "center", margin: "250px 0" }}>
             <p
                 style={{
@@ -85,15 +88,6 @@ const PaymentRedirect = ({ location, success }) => {
                 )}
             </p>
             <small>
-                <span>
-                    <Spinner
-                        animation="border"
-                        role="status"
-                        className="redirectLoader"
-                    >
-                        <span className="sr-only">Loading...</span>
-                    </Spinner>
-                </span>{" "}
                 Redirecting to homepage... <Link to="/">Go home</Link>
             </small>
         </div>

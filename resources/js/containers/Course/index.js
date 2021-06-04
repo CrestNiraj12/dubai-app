@@ -165,28 +165,7 @@ const Course = ({ match }) => {
                                                                     AMOUNT}
                                                             </span>
                                                         )}
-                                                        <span
-                                                            style={{
-                                                                display: "block"
-                                                            }}
-                                                        >
-                                                            + £{course.uni_fee}{" "}
-                                                            x 3 (university fee
-                                                            for each year)
-                                                        </span>
                                                     </p>
-                                                    <small>
-                                                        <i>
-                                                            Note: University fee
-                                                            is paid at the end
-                                                            of each year
-                                                            separately in L4, L5
-                                                            and L6 and is not
-                                                            included while
-                                                            paying the fee in
-                                                            the website
-                                                        </i>
-                                                    </small>
                                                     <Row>
                                                         <Col
                                                             style={{

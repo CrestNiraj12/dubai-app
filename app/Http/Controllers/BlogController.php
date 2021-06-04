@@ -44,17 +44,9 @@ class BlogController extends Controller
         return response()->json(['message'=> 'Blog deleted successfully!']);
     }
 
-    public function getBlogView($id) {
-        $blog = $this->show($id);
-        return view('welcome', [
-            'title' => $blog['title'], 
-            'description' => $blog['description'], 
-            'image_path' => $blog['thumbnail'], 
-            'meta_title' => $blog['meta_title'],
-            'keywords' => $blog['keywords'],
-            'meta_description' => $blog['meta_description'],
-            'og_description' => $blog['og_description'],
-            'twitter_description' => $blog['twitter_description'],
-        ]);
+    public function getBlogView($path) {
+        $sep = explode("-", $path);
+        $blog = Blog::find(end($sep));
+        return view('pages.blogpost', ['post' => $blog]);
     }
 }

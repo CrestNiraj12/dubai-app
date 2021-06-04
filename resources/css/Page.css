@@ -1,6 +1,6 @@
 .page-container,
 .page-content {
-    margin: 150px 8% !important;
+    margin: 100px 8% !important;
     max-width: 100% !important;
     width: auto !important;
 }
@@ -40,7 +40,7 @@
     }
 
     .page-title {
-        margin: 15px 0;
+        margin: 30px 0;
     }
 
     .page-thumbnail {
@@ -48,7 +48,7 @@
     }
 
     .page-container {
-        margin: 0 !important;
+        margin: 50px 0 !important;
         padding: 0 !important;
         max-width: 100%;
     }

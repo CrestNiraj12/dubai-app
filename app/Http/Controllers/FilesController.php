@@ -15,4 +15,9 @@ class FilesController extends Controller
         $files = Files::with("file_category")->get();
         return response()->json($files);
     }
+
+    public function getFilesView() {
+        $files = Files::with("file_category")->get();
+        return view("pages.downloads", ['files' => $files]);
+    }
 }

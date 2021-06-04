@@ -41,4 +41,10 @@ class NewsController extends Controller
         News::where('id', $id)->delete();
         return response()->json(['message'=> 'News deleted successfully!']);
     }
+
+    public function getNewsView($path) {
+        $sep = explode("-", $path);
+        $news = News::find(end($sep));
+        return view('pages.newspost', ['post' => $news]);
+    }
 }

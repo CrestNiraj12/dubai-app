@@ -9,6 +9,7 @@ const News = () => {
     const [news, setNews] = useState([]);
 
     useEffect(() => {
+        setLoading(true);
         axios
             .get("/api/news")
             .then(res => {
@@ -25,19 +26,15 @@ const News = () => {
             ) : (
                 <Container fluid style={{ padding: 0 }}>
                     <Container className="page-container">
-                        <Jumbotron>
-                            <h1>Latest News</h1>
-                            <p>
-                                Get the latest news regarding The Woolwich
-                                Institute.
-                            </p>
-                        </Jumbotron>
-                        {news ? (
+                        <h1 className="page-title" style={{ color: "#000" }}>
+                            Recents
+                        </h1>
+                        {news && news.length > 0 ? (
                             <Row>
                                 <CardLayout data={news} parent="news" />
                             </Row>
                         ) : (
-                            <h2>No news found!</h2>
+                            <h4>No news available!</h4>
                         )}
                     </Container>
                 </Container>

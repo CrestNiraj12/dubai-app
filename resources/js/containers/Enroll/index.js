@@ -9,13 +9,24 @@ import {
     Spinner
 } from "react-bootstrap";
 import "../../../css/Enroll.css";
-import Payment from "../Payment";
 import axios from "axios";
 import PageLoadSpinner from "../../components/PageLoadSpinner";
-import { useHistory } from "react-router-dom";
+import { loadStripe } from "@stripe/stripe-js";
+import {
+    PayPalScriptProvider,
+    PayPalButtons,
+    usePayPalScriptReducer
+} from "@paypal/react-paypal-js";
+import CurrencyConverter from "@y2nk4/currency-converter";
+
+const stripePromise = loadStripe(
+    "pk_test_51HrrlNARkfToiPFSupHqiJpGnsej3pPYyODpRU5x651HuosD4y4b9fufVkDzfKf0BQNbKgxwAKZWMiFWxrnIgaRO000iRAqmx5"
+);
+
+const PAYPAL_CLIENT_ID =
+    "AU7wEngzj7X-pWbhKsvfGbT4AaLZ0zEyoTL8XPiv01ujkCHwdZdHelg-TrCA-NjYkWz2VwToxE1DyPWV";
 
 const Enroll = ({ match }) => {
-    var history = useHistory();
     const initialData = {
         firstname: "",
         lastname: "",
@@ -30,21 +41,24 @@ const Enroll = ({ match }) => {
         coupon_id: null,
         course_id: match.params.id
     };
-    const [buttonLoading, setButtonLoading] = useState(false);
-    const [payment, setPayment] = useState(false);
     const [validated, setValidated] = useState(false);
     const [data, setData] = useState(initialData);
     const [invalidDatas, setInvalidDatas] = useState(initialData);
-    const [applications, setApplications] = useState([]);
     const [loading, setLoading] = useState(true);
     const [course, setCourse] = useState(null);
     const [applicantId, setApplicantId] = useState(null);
+    const [detailsSubmitted, setDetailsSubmitted] = useState(false);
+    const [finalAmountToUSD, setFinalAmountToUSD] = useState(null);
+    const converter = new CurrencyConverter("9d5c62482fe6c1519c50");
 
     useEffect(() => {
         axios
             .get(`/api/courses/${match.params.id}`)
             .then(res => {
                 setCourse(res.data);
+                converter.convert("AED", "USD", res.data.fees).then(res => {
+                    setFinalAmountToUSD(Number(res.toFixed(2)));
+                });
                 const coupon = localStorage.getItem("couponId");
                 if (coupon)
                     setData({
@@ -54,13 +68,7 @@ const Enroll = ({ match }) => {
                     });
                 setLoading(false);
             })
-            .then(err => console.log(err));
-    }, []);
-
-    useEffect(() => {
-        axios.get(`/api/applicants`).then(res => {
-            setApplications(res.data);
-        });
+            .catch(err => console.log(err));
     }, []);
 
     const handleChange = e =>
@@ -92,13 +100,6 @@ const Enroll = ({ match }) => {
                 isValid = false;
                 errors["email"] = "Please enter valid email address.";
             }
-        }
-
-        const emails = applications.map(data => data.email);
-        if (emails.includes(data["email"])) {
-            isValid = false;
-            errors["email"] =
-                "We have already received an application from this email!";
         }
 
         if (!data["phone"]) {
@@ -151,26 +152,23 @@ const Enroll = ({ match }) => {
 
     const handleSubmit = e => {
         e.preventDefault();
-        setButtonLoading(true);
         if (validateData()) {
             setValidated(true);
             axios
                 .post("/api/applicants", data)
                 .then(res => {
                     setApplicantId(res.data.applicantId);
-                    setButtonLoading(false);
-                    setPayment(true);
+                    setDetailsSubmitted(true);
                 })
                 .catch(err => {
                     console.log(err.response);
                     alert(
                         "Error! There might be something wrong with your provided values. Please try again!"
                     );
-                    setButtonLoading(false);
                 });
         } else {
+            alert("Error occured while validating your details!");
             setValidated(false);
-            setButtonLoading(false);
         }
     };
 
@@ -179,10 +177,92 @@ const Enroll = ({ match }) => {
             "Are you sure you want to cancel the payment?"
         );
         if (confirm) {
-            localStorage.removeItem("couponId");
-            localStorage.removeItem("discount");
-            history.push("/");
+            localStorage.clear();
+            window.location = "/";
         }
+    };
+
+    const payWithStripe = async e => {
+        e.preventDefault();
+
+        if (course.fees <= 0) {
+            alert("Amount should be greater than 0");
+            return;
+        }
+
+        const stripe = await stripePromise.catch(err => {
+            console.log(err);
+        });
+
+        const courseItem = JSON.stringify({
+            price_data: {
+                currency: "AED",
+                product_data: {
+                    name: course.title,
+                    images: [
+                        window.location.origin +
+                            "/storage/" +
+                            course.thumbnail.replaceAll("\\", "/")
+                    ]
+                },
+                unit_amount: course.fees * 100
+            },
+            quantity: 1
+        });
+
+        const response = await axios
+            .post("/api/stripe/pay", {
+                course: courseItem,
+                applicantId
+            })
+            .catch(err => {
+                console.log(err.response);
+            });
+
+        const result = await stripe.redirectToCheckout({
+            sessionId: response.data
+        });
+
+        if (result.error) console.log(result.error);
+    };
+
+    const onApprove = (data, actions) => {
+        actions.order.capture().then(() => {
+            const details = {
+                method: "paypal",
+                amount: finalAmountToUSD,
+                currency: "USD",
+                applicant_id: applicantId
+            };
+            axios
+                .post("/api/payments", details)
+                .then(async () => {
+                    return await axios.put(`/api/applicants/${applicantId}`, {
+                        payment_made: true
+                    });
+                })
+                .then(() => {
+                    window.location.href = `/success/?order_id=${data.orderID}&method=paypal`;
+                })
+                .catch(err => "Error while creating payments!");
+        });
+    };
+
+    const onCancel = data => {
+        history.push("/cancel");
+    };
+
+    const createOrder = (data, actions) => {
+        return actions.order.create({
+            purchase_units: [
+                {
+                    amount: {
+                        currency: "USD",
+                        value: finalAmountToUSD
+                    }
+                }
+            ]
+        });
     };
 
     return (
@@ -191,27 +271,10 @@ const Enroll = ({ match }) => {
                 <PageLoadSpinner />
             ) : (
                 <>
-                    <Fragment>
-                        <Modal show={payment} onHide={cancelPayment}>
-                            <Modal.Header closeButton>
-                                <Modal.Title>
-                                    Choose a payment method
-                                </Modal.Title>
-                            </Modal.Header>
-                            <Modal.Body>
-                                {" "}
-                                <Payment
-                                    course={course}
-                                    applicantId={applicantId}
-                                />
-                            </Modal.Body>
-                        </Modal>
-                    </Fragment>
-
                     <Container className="enroll">
                         <Row>
                             <Col>
-                                <h2>Please fill up the enrollment form</h2>
+                                <h4 className="text-muted">Enrollment form</h4>
                                 <Form
                                     noValidate
                                     validated={validated}
@@ -228,6 +291,7 @@ const Enroll = ({ match }) => {
                                                     !!invalidDatas.firstname
                                                 }
                                                 onChange={handleChange}
+                                                disabled={detailsSubmitted}
                                                 size="sm"
                                                 required
                                             />
@@ -244,6 +308,7 @@ const Enroll = ({ match }) => {
                                                 isInvalid={
                                                     !!invalidDatas.lastname
                                                 }
+                                                disabled={detailsSubmitted}
                                                 type="text"
                                                 size="sm"
                                                 required
@@ -258,6 +323,7 @@ const Enroll = ({ match }) => {
                                         <Form.Control
                                             name="email"
                                             onChange={handleChange}
+                                            disabled={detailsSubmitted}
                                             value={data.email}
                                             isInvalid={!!invalidDatas.email}
                                             type="email"
@@ -273,6 +339,7 @@ const Enroll = ({ match }) => {
                                         <Form.Control
                                             name="phone"
                                             onChange={handleChange}
+                                            disabled={detailsSubmitted}
                                             value={data.phone}
                                             isInvalid={!!invalidDatas.phone}
                                             type="tel"
@@ -288,6 +355,7 @@ const Enroll = ({ match }) => {
                                         <Form.Control
                                             name="address"
                                             onChange={handleChange}
+                                            disabled={detailsSubmitted}
                                             value={data.address}
                                             isInvalid={!!invalidDatas.address}
                                             type="text"
@@ -303,6 +371,7 @@ const Enroll = ({ match }) => {
                                         <Form.Control
                                             type="date"
                                             name="dob"
+                                            disabled={detailsSubmitted}
                                             value={data.dob}
                                             isInvalid={!!invalidDatas.dob}
                                             onChange={handleChange}
@@ -318,6 +387,7 @@ const Enroll = ({ match }) => {
                                             type="text"
                                             name="qualification"
                                             value={data.qualification}
+                                            disabled={detailsSubmitted}
                                             isInvalid={
                                                 !!invalidDatas.qualification
                                             }
@@ -334,6 +404,7 @@ const Enroll = ({ match }) => {
                                             type="number"
                                             name="gpa"
                                             value={data.gpa}
+                                            disabled={detailsSubmitted}
                                             isInvalid={!!invalidDatas.gpa}
                                             onChange={handleChange}
                                             required
@@ -347,6 +418,7 @@ const Enroll = ({ match }) => {
                                         <Form.Control
                                             type="text"
                                             name="school"
+                                            disabled={detailsSubmitted}
                                             value={data.school}
                                             isInvalid={!!invalidDatas.school}
                                             onChange={handleChange}
@@ -356,30 +428,108 @@ const Enroll = ({ match }) => {
                                             {invalidDatas.school}
                                         </Form.Control.Feedback>
                                     </Form.Group>
-                                    <Button onClick={handleSubmit}>
-                                        {buttonLoading && (
-                                            <>
-                                                <Spinner
-                                                    as="span"
-                                                    animation="border"
-                                                    size="sm"
-                                                    role="status"
-                                                    aria-hidden="true"
-                                                    className="buttonLoader"
-                                                />
-                                                <span className="sr-only">
-                                                    Loading...
-                                                </span>
-                                            </>
-                                        )}
-                                        {!buttonLoading && <span>Submit</span>}
-                                    </Button>
+
+                                    <hr style={{ margin: "20px 0" }} />
+                                    {detailsSubmitted ? (
+                                        <>
+                                            <h4 className="mb-3">Payment</h4>
+                                            <small>
+                                                <button
+                                                    className="btn btn-link"
+                                                    onClick={() =>
+                                                        setDetailsSubmitted(
+                                                            false
+                                                        )
+                                                    }
+                                                    style={{ padding: 0 }}
+                                                >
+                                                    Edit your information
+                                                </button>
+                                            </small>
+                                            <div>
+                                                <button
+                                                    className="btn btn-primary"
+                                                    style={{
+                                                        width: "100%",
+                                                        margin: "10px 0",
+                                                        height: "40px"
+                                                    }}
+                                                    onClick={payWithStripe}
+                                                >
+                                                    <span>Pay with Stripe</span>
+                                                </button>
+                                                <PayPalScriptProvider
+                                                    options={{
+                                                        "client-id": PAYPAL_CLIENT_ID,
+                                                        currency: "GBP"
+                                                    }}
+                                                >
+                                                    <PaypalButtonsCustomized
+                                                        createOrder={
+                                                            createOrder
+                                                        }
+                                                        onApprove={onApprove}
+                                                        onCancel={onCancel}
+                                                    />
+                                                </PayPalScriptProvider>
+                                            </div>
+                                        </>
+                                    ) : (
+                                        <Button
+                                            onClick={handleSubmit}
+                                            style={{
+                                                padding: "5px 20px",
+                                                height: "40px"
+                                            }}
+                                        >
+                                            <span>Submit</span>
+                                        </Button>
+                                    )}
                                 </Form>
                             </Col>
                         </Row>
                     </Container>
                 </>
             )}
+        </>
+    );
+};
+
+const PaypalButtonsCustomized = ({ createOrder, onApprove, onCancel }) => {
+    const [{ isPending }, dispatch] = usePayPalScriptReducer();
+
+    useEffect(() => {
+        const scriptProviderOptions = {
+            "client-id": PAYPAL_CLIENT_ID
+        };
+
+        dispatch({
+            type: "resetOptions",
+            value: {
+                ...scriptProviderOptions,
+                "data-order-id": Date.now()
+            }
+        });
+    }, [dispatch]);
+
+    return (
+        <>
+            {isPending ? (
+                <Spinner animation="border" role="status">
+                    <span className="sr-only">Loading...</span>
+                </Spinner>
+            ) : null}
+            <PayPalButtons
+                style={{
+                    layout: "vertical",
+                    label: "pay",
+                    height: 35
+                }}
+                createOrder={(data, actions) => createOrder(data, actions)}
+                onApprove={(data, actions) => onApprove(data, actions)}
+                onCancel={data => onCancel(data)}
+                onError={err => console.log(err)}
+            />
         </>
     );
 };

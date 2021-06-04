@@ -28,7 +28,7 @@ class ApplicantController extends Controller
             'course_id' => 'required',
         ]);
 
-        $applicant = Applicant::create($request->all());
+        $applicant = Applicant::updateOrCreate(['email' => $request->email], $request->all());
         return response()->json(['message'=> 'Applicant created successfully!', 'applicantId' => $applicant->id]);
     }
 

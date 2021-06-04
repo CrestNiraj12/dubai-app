@@ -412,7 +412,9 @@ const PaypalButtonsCustomized = ({
                 createOrder={(data, actions) => createOrder(data, actions)}
                 onApprove={(data, actions) => onApprove(data, actions)}
                 onCancel={data => onCancel(data)}
-                onError={err => console.log(err)}
+                onError={err => {
+                    console.log(err);
+                }}
                 forceReRender={finalAmountToUSD()}
             />
         </>

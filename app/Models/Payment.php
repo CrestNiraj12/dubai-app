@@ -13,7 +13,6 @@ class Payment extends Model
         'method',
         'amount',
         'currency',
-        'period',
         'applicant_id'
     ];
 }

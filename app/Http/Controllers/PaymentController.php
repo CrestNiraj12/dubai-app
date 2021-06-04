@@ -17,7 +17,6 @@ class PaymentController extends Controller
         $request->validate([
             'method' => 'required',
             'amount' => 'required',
-            'period' => 'required',
             'applicant_id' => 'required'
         ]);
         

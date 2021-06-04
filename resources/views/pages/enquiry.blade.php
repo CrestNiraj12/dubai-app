@@ -9,36 +9,33 @@
 
 @section('content')
 
-     <section class="breadcrumbs-area bg-3 ptb-110 bg-opacity bg-relative">
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-12 text-center">
-                        <div class="breadcrumbs">
-                            <h2 class="page-title">Enquiry Form</h2>
-                            <ul>
-                                <li>
-                                    <a class="active" href="#">Home</a>
-                                </li>
-                                <li>
-                                    <a>Pages</a>
-                                </li>
-                                <li>Enquiry Form</li>
-                            </ul>
-                        </div>
-                    </div>
+<section class="breadcrumbs-area bg-3 ptb-110 bg-opacity bg-relative">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <div class="breadcrumbs">
+                    <h2 class="page-title">Enquiry Form</h2>
+                    <ul>
+                        <li>
+                            <a class="active" href="#">Home</a>
+                        </li>
+                        <li>Enquiry Form</li>
+                    </ul>
                 </div>
             </div>
-        </section>
-        <!-- Start page content -->
-        <section class="contact-area">
-            <div class="container-fluid">
-                <div class="row">
-                   
-                </div>
-                <div class="row">
-                    <div class="col-lg-12 col-offset-6 col-sm-9">
-                        <div class="conract-area-bottom">
-                         <!--    <h3 align="center" class="main-contact">Enquiry Form</h3>
+        </div>
+    </div>
+</section>
+<!-- Start page content -->
+<section class="contact-area">
+    <div class="container-fluid">
+        <div class="row">
+
+        </div>
+        <div class="row">
+            <div class="col-lg-12 col-offset-6 col-sm-9">
+                <div class="conract-area-bottom">
+                    <!--    <h3 align="center" class="main-contact">Enquiry Form</h3>
                             <form id="contact-form" action="#" method="post">
                                 <div class="row">
                                     <div class="col-md-6">
@@ -67,8 +64,10 @@
                                     </div>
                                 </div>
                             </form> -->
-                            
-                            <div id="zf_div_LeImRrfZ3-c_shwX7N2A2XmFsJ1JilAvc2QjnF3KtF8"></div><script type="text/javascript">(function() {
+
+                    <div id="zf_div_LeImRrfZ3-c_shwX7N2A2XmFsJ1JilAvc2QjnF3KtF8"></div>
+                    <script type="text/javascript">
+                        (function() {
 try{
 var f = document.createElement("iframe");   
 f.src = 'https://forms.zohopublic.com/thewoolwichinstitute/form/TWIEnquiryForm/formperma/LeImRrfZ3-c_shwX7N2A2XmFsJ1JilAvc2QjnF3KtF8?zf_rszfm=1';
@@ -91,20 +90,21 @@ iframe.style.height = zf_ifrm_ht_nw;
 }
 }, false);
 }catch(e){}
-})();</script>
-
-                            
-                            
-                         
+})();
+                    </script>
 
 
 
 
 
-                            <p class="form-messege"></p>
-                        </div>
-                    </div>
-                    <!-- <div class="col-md-4 col-sm-4">
+
+
+
+
+                    <p class="form-messege"></p>
+                </div>
+            </div>
+            <!-- <div class="col-md-4 col-sm-4">
                         <div class="communication-all pt-110">
                             <h3 class="main-contact">Address</h3>
                             <div class="single-communication mb-20">
@@ -140,9 +140,9 @@ iframe.style.height = zf_ifrm_ht_nw;
                         
                         </div>
                     </div> -->
-                    <br><br>
-                        <!-- New -->
-                         <!-- <div class="col-md-4 col-sm-4" style="top: 40px;">
+            <br><br>
+            <!-- New -->
+            <!-- <div class="col-md-4 col-sm-4" style="top: 40px;">
                             <h3 class="main-contact">Opening Hours</h3>
                             <div class="single-communication">
                                 <div class="communication-icon">
@@ -161,10 +161,10 @@ iframe.style.height = zf_ifrm_ht_nw;
                                     </p>
                                 </div>
                             </div></div> -->
-                            <!-- New -->
-                </div>
-            </div>
-        </section>
-        <!-- End page content -->
+            <!-- New -->
+        </div>
+    </div>
+</section>
+<!-- End page content -->
 
 @endsection

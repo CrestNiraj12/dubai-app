@@ -12,9 +12,18 @@ const CardLayout = ({ data, parent }) => {
             <Row className="cardLayout">
                 {data &&
                     data.map(({ id, title, description, thumbnail }, index) => (
-                        <div key={index} className="col-md-4 col-sm-6">
+                        <div
+                            key={index}
+                            className="col-md-4 col-sm-6"
+                            style={{ padding: 0 }}
+                        >
                             <Card
-                                onClick={() => history.push(`/${parent}/${id}`)}
+                                onClick={() =>
+                                    (window.location = `/${parent}/${title
+                                        .toLowerCase()
+                                        .split(" ")
+                                        .join("-")}-${id}`)
+                                }
                                 className="contentCard"
                             >
                                 <Card.Img
@@ -22,8 +31,21 @@ const CardLayout = ({ data, parent }) => {
                                     className="cardImg"
                                     src={`\\storage\\${thumbnail}`}
                                 />
-                                <Card.Body className="cardBody">
-                                    <Card.Title>{title}</Card.Title>
+                                <Card.Body
+                                    className="cardBody"
+                                    style={{
+                                        background: "#f1f1f1",
+                                        padding: "10px 20px"
+                                    }}
+                                >
+                                    <Card.Title
+                                        style={{
+                                            fontSize: 22,
+                                            marginBottom: 15
+                                        }}
+                                    >
+                                        {title}
+                                    </Card.Title>
                                     <Card.Text as="div">
                                         <HTMLEllipsis
                                             unsafeHTML={description}

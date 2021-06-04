@@ -1,9 +1,12 @@
 <?php
 
 use App\Http\Controllers\BlogController;
+use App\Http\Controllers\CourseController;
+use App\Http\Controllers\FilesController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\PagesController;
+use App\Models\Course;
 use Illuminate\Support\Facades\Route;
 use TCG\Voyager\Facades\Voyager;
 
@@ -29,10 +32,19 @@ Route::get('/', [PagesController::class, 'getLandingPage']);
 
 Route::group(['middleware' => ['web']], function () {
     Route::get('/courses/{slug}', [PagesController::class, 'getCourse']);
+    Route::view('/news', 'pages.news');
+    Route::view('/blog', 'pages.blog');
+    Route::get('/enroll/{id}', [CourseController::class, 'getCourseEnrollment']);
+    Route::get('/news/{path}', [NewsController::class, 'getNewsView']);
+    Route::get('/blog/{path}', [BlogController::class, 'getBlogView']);
+    Route::get('/downloads', [FilesController::class, 'getFilesView']);
     Route::get('/contact', [PagesController::class, 'getContact']);
     Route::get('/enquiry', [PagesController::class, 'getEnquiry']);
+    Route::get('/career', [PagesController::class, 'getCareer']);
     Route::get('/applicationform', [PagesController::class, 'getApplication']);
     Route::get('/registration-webinar', [PagesController::class, 'getRegistration']);
+    Route::view('/success', 'pages.redirect');
+    Route::view('/cancel', 'pages.redirect');
     Route::get('/{slug}', [PagesController::class, 'getPage']);
     /*
     Route::get('/mdp', [PagesController::class, 'getMdp']);
